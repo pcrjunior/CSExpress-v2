@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Exports;
+
+use App\Models\ContaPagar;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+
+class ContasPagarExport implements FromCollection, WithHeadings
+{
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
+    public function collection()
+    {
+        $query = ContaPagar::with(['ordemServico.clienteOrigem', 'ordemServico.clienteDestino']);
+
+        if ($this->request->filled('data_vencimento_inicio')) {
+            $query->where('data_vencimento', '>=', $this->request->data_vencimento_inicio);
+        }
+        if ($this->request->filled('data_vencimento_fim')) {
+            $query->where('data_vencimento', '<=', $this->request->data_vencimento_fim);
+        }
+        if ($this->request->filled('data_pagamento_inicio')) {
+            $query->where('data_pagamento', '>=', $this->request->data_pagamento_inicio);
+        }
+        if ($this->request->filled('data_pagamento_fim')) {
+            $query->where('data_pagamento', '<=', $this->request->data_pagamento_fim);
+        }
+        if ($this->request->filled('cliente_id')) {
+            $query->whereHas('ordemServico', function ($q) {
+                $q->where('cliente_origem_id', $this->request->cliente_id)
+                  ->orWhere('cliente_destino_id', $this->request->cliente_id);
+            });
+        }
+
+        return $query->get()->map(function ($conta) {
+            return [
+                'Nº OS'             => $conta->ordemServico->numero_os ?? '-',
+                'Cliente'           => $conta->ordemServico->clienteOrigem->nome ??
+                                       ($conta->ordemServico->clienteDestino->nome ?? '-'),
+                'Valor'             => number_format($conta->valor, 2, ',', '.'),
+                'Data Vencimento'   => optional($conta->data_vencimento)->format('d/m/Y'),
+                'Data Pagamento'    => optional($conta->data_pagamento)->format('d/m/Y'),
+                'Status'            => ucfirst($conta->status_pagamento),
+            ];
+        });
+    }
+
+    public function headings(): array
+    {
+        return ['Nº OS', 'Cliente', 'Valor', 'Data Vencimento', 'Data Pagamento', 'Status'];
+    }
+}
+

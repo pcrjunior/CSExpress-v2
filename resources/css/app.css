@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .bg-custom {
+        background-color: rgba(0, 57, 119, 1);
+    }
+
+    .table-blue thead th {
+        background-color: #0D47A1 !important;
+        color: white !important;
+    }
+}
+

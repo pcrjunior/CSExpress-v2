@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+        h2 { text-align: center; color: #333; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        .text-center { text-align: center; }
+        .text-end { text-align: right; }
+    </style>
+</head>
+<body>
+    <h2>Relatório de Ajudantes</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th class="text-center">Total de Ordens</th>
+                <th class="text-end">Total Recebido (R$)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($ajudantes as $ajudante)
+                <tr>
+                    <td>{{ $ajudante->nome }}</td>
+                    <td class="text-center">{{ $ajudante->total_ordens }}</td>
+                    <td class="text-end">R$ {{ number_format($ajudante->total_pago, 2, ',', '.') }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</body>
+</html>
+

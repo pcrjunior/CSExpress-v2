@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up()
+    {
+        Schema::table('ordem_servicos', function (Blueprint $table) {
+            // Adiciona a coluna "resultado" do tipo decimal, por exemplo, com 10 dígitos e 2 casas decimais.
+            // Ajuste o tipo conforme sua necessidade (pode ser string, decimal, etc.)
+            $table->decimal('resultado', 10, 2)->default(0);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::table('ordem_servicos', function (Blueprint $table) {
+            $table->dropColumn('resultado');
+        });
+    }
+};
