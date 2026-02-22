@@ -85,6 +85,10 @@ class RelatorioController extends Controller
             });
         }
 
+        // 🔢 Soma TOTAL GERAL (antes da paginação)
+        $somaTotal = (clone $query)->sum('valor_total');
+        $somaResultado = (clone $query)->sum('valor_repasse_resultado');
+
         $ordens = $query->latest()->paginate(15)->appends($request->query());
 
         $entregadores = Entregador::orderBy('nome')->get();
@@ -99,7 +103,9 @@ class RelatorioController extends Controller
             'empresas',
             'motoristas',
             'ajudantes',
-            'clientes'
+            'clientes',
+            'somaTotal',
+            'somaResultado'
         ));
     }
 

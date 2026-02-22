@@ -28,7 +28,7 @@
                 <div class="card-body">
                     <form method="GET" action="{{ route('relatorios.ordens-servico') }}">
                         <div class="row g-3">
-                            
+
                             <div class="col-md-4">
                                 <label for="cliente_id" class="form-label">Cliente</label>
                                 <select class="form-select" name="cliente_id" id="cliente_id">
@@ -56,11 +56,11 @@
                             <div class="col-md-3">
                             <label class="form-label d-block">&nbsp;</label>
                                 <div class="form-check">
-                                    <input 
-                                        class="form-check-input form-check-input-lg" 
-                                        type="checkbox" 
-                                        name="somente_contratante" 
-                                        id="somente_contratante" 
+                                    <input
+                                        class="form-check-input form-check-input-lg"
+                                        type="checkbox"
+                                        name="somente_contratante"
+                                        id="somente_contratante"
                                         value="1"
                                         style="width: 2.0em; height: 2.0em; cursor: pointer;"
                                         {{ request('somente_contratante') ? 'checked' : '' }}>
@@ -134,6 +134,7 @@
                             <th>Origem</th>
                             <th>Destino</th>
                             <th>Motorista</th>
+                            <th>Observações</th>
                             <th class="text-end">Valor Total</th>
                             <th class="text-end">Resultado</th>
                         </tr>
@@ -170,6 +171,11 @@
                                 </td>
 
                                 <td>{{ optional($os->motorista)->nome ?? '-' }}</td>
+
+                                <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    {{ $os->observacoes ?? '-' }}
+                                </td>
+
                                 <td class="text-end">R$ {{ number_format($os->valor_total, 2, ',', '.') }}</td>
                                 <td class="text-end fw-bold text-{{ $os->valor_resultado >= 0 ? 'success' : 'danger' }}">
                                     R$ {{ number_format($os->valor_repasse_resultado, 2, ',', '.') }}
@@ -184,6 +190,19 @@
                             </tr>
                         @endforelse
                     </tbody>
+                    <tfoot>
+                        <tr class="table-light fw-bold">
+                            <td colspan="7" class="text-end pe-3">
+                                TOTAL GERAL:
+                            </td>
+                            <td class="text-end">
+                                R$ {{ number_format($somaTotal, 2, ',', '.') }}
+                            </td>
+                            <td class="text-end {{ $somaResultado >= 0 ? 'text-success' : 'text-danger' }}">
+                                R$ {{ number_format($somaResultado, 2, ',', '.') }}
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
 
