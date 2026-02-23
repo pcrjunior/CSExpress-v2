@@ -113,71 +113,35 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 9%;">OS</th>
-                <th style="width: 8%;">Data</th>
-                <th style="width: 8%;">Status</th>
-                <th style="width: 12%;">Origem</th>
-                <th style="width: 12%;">Destino</th>
-                <th style="width: 12%;">Apelido</th>
-                <th style="width: 12%;">Motorista</th>
-                <th style="width: 17%;">Observações</th>
-                <th style="width: 5%;" class="text-end">Total</th>
-                <th style="width: 5%;" class="text-end">Resultado</th>
+                <th style="width: 11%;">OS</th>
+                <th style="width: 9%;">Data</th>
+                <th style="width: 9%;">Status</th>
+                <th style="width: 14%;">Origem</th>
+                <th style="width: 14%;">Destino</th>
+                <th style="width: 14%;">Apelido</th>
+                <th style="width: 15%;">Motorista</th>
+                <th style="width: 7%;" class="text-end">Total (R$)</th>
+                <th style="width: 7%;" class="text-end">Resultado</th>
             </tr>
         </thead>
-
         <tbody>
-            @php
-                $somaTotal = 0;
-                $somaResultado = 0;
-            @endphp
-
             @foreach($ordens as $os)
-
-                @php
-                    $somaTotal += $os->valor_total ?? 0;
-                    $somaResultado += $os->valor_repasse_resultado ?? 0;
-                @endphp
-
                 <tr>
                     <td class="numero-os">{{ $os->numero_os }}</td>
                     <td>{{ \Carbon\Carbon::parse($os->data_servico)->format('d/m/Y') }}</td>
                     <td>{{ ucfirst(str_replace('_', ' ', $os->status)) }}</td>
                     <td>{{ $os->clienteOrigem->nome ?? '-' }}</td>
                     <td>{{ $os->clienteDestino->nome ?? '-' }}</td>
-                    <td>{{ $os->clienteOrigem->apelido ?? '-' }} / {{ $os->clienteDestino->apelido ?? '-' }}</td>
+                    <td>{{ $os->clienteOrigem->apelido ?? '-' }} / {{ $os->clienteDestino->apelido ?? '-' }} </td>
                     <td>{{ $os->motorista->nome ?? '-' }}</td>
-                    <td style="word-break: break-word;">
-                        {{ $os->observacoes ?? '-' }}
-                    </td>
-                    <td class="text-end">
-                        R$ {{ number_format($os->valor_total, 2, ',', '.') }}
-                    </td>
+                    <td class="text-end">R$ {{ number_format($os->valor_total, 2, ',', '.') }}</td>
                     <td class="text-end {{ $os->valor_repasse_resultado >= 0 ? 'text-success' : 'text-danger' }}">
                         R$ {{ number_format($os->valor_repasse_resultado, 2, ',', '.') }}
                     </td>
                 </tr>
             @endforeach
         </tbody>
-
-        <tfoot>
-            <tr>
-                <td colspan="8" class="text-end text-bold" style="border-top: 2px solid #000;">
-                    TOTAL GERAL:
-                </td>
-                <td class="text-end text-bold" style="border-top: 2px solid #000;">
-                    R$ {{ number_format($somaTotal, 2, ',', '.') }}
-                </td>
-                <td class="text-end text-bold {{ $somaResultado >= 0 ? 'text-success' : 'text-danger' }}" style="border-top: 2px solid #000;">
-                    R$ {{ number_format($somaResultado, 2, ',', '.') }}
-                </td>
-            </tr>
-        </tfoot>
     </table>
-
-
-
-
 
     <!-- Rodapé -->
     <footer>

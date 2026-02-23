@@ -15,7 +15,7 @@
             @csrf
             <button type="submit" class="btn btn-primary btn-sm btn-enviar-ns">
                 <span class="btn-text">
-                    <i class="fas fa-envelope me-1"></i> Enviar por E-mail
+                    <i class="fas fa-envelope me-1"></i> Enviar por e-mail
                 </span>
                 <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
             </button>
@@ -55,8 +55,8 @@
         $clienteDestino = $ordemServico->clienteDestino;
         $clientePagante = $contratanteTipo === 'destino' ? $clienteDestino : $clienteOrigem;
         $clienteNaoPagante = $contratanteTipo === 'destino' ? $clienteOrigem : $clienteDestino;
-        
-        
+
+
         $dataInicio  = OrdemServicoHistorico::ultimaDataPorStatus($ordemServico->id, 'em_andamento');
         $dataTermino = OrdemServicoHistorico::ultimaDataPorStatus($ordemServico->id, 'concluido');
     @endphp
@@ -131,14 +131,14 @@
                     }}
                 </td>
                 <td width="18%">
-                    {{ $dataInicio  
-                        ? $dataInicio->format('H:i')  
-                        : '-' 
+                    {{ $dataInicio
+                        ? $dataInicio->format('H:i')
+                        : '-'
                     }}
                     /
-                    {{ $dataTermino 
-                        ? $dataTermino->format('H:i') 
-                        : '-' 
+                    {{ $dataTermino
+                        ? $dataTermino->format('H:i')
+                        : '-'
                     }}
                 </td>
                 <td width="25%">{{ optional($ordemServico->motorista)->nome ?? '-' }}</td>

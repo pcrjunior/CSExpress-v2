@@ -482,8 +482,21 @@ class OrdemServicoController extends Controller
         ]);
 
         if ($validated['status'] === 'concluido') {
-            $ordemServico->data_final = $request->input('data_final') ?? Carbon::now()->toDateString();
-            $ordemServico->hora_final = $request->input('hora_final') ?? Carbon::now()->format('H:i');
+
+            if ($request->filled('hora_final')) {
+                $ordemservico->hora_final = $request->hora_final;
+            } else {
+                $ordemservico->hora_final = now()->format('H:i:s');
+            }
+
+            if ($request->filled('data_final')) {
+                $ordemservico->data_final = $request->data_final;
+            } else {
+                $ordemservico->data_final = now()->toDateString();
+            }
+
+
+
 
             // Cálculo do tempo de serviço
             if (!empty($validated['hora_inicial']) && !empty($validated['hora_final'])) {
@@ -639,7 +652,12 @@ class OrdemServicoController extends Controller
         // Garante que os dados mínimos estejam presentes no request
         $request->merge([
             'status' => 'concluido',
-            'hora_final' => $request->hora_final ?? now()->format('H:i:s'),
+            'hora_final' => $request->filled('hora_final')
+                ? $request->hora_final
+                : now()->format('H:i'),
+            'data_final' => $request->filled('data_final')
+                ? $request->data_final
+                : now()->toDateString(),
             'tempo_total' => $request->tempo_total ?? null
         ]);
 
@@ -701,7 +719,7 @@ class OrdemServicoController extends Controller
 
         $validated = $request->validate([
             'status' => 'required|in:pendente,em_andamento,concluido,cancelado',
-            'hora_final' => 'nullable|date_format:H:i:s',
+            'hora_final' => 'nullable|date_format:H:i',
             'data_final' => 'nullable|date',
             'tempo_total' => 'nullable|string'
         ]);
@@ -714,9 +732,17 @@ class OrdemServicoController extends Controller
                 $ordemservico->status = $newStatus;
 
                 if ($newStatus === 'concluido') {
-                    // Atualiza data/hora final e tempo total
-                    $ordemservico->hora_final = $validated['hora_final'] ?? now()->format('H:i:s');
-                    $ordemservico->data_final = $validated['data_final'] ?? now()->toDateString();
+
+                    $ordemservico->data_final = !empty($validated['data_final'])
+                        ? $validated['data_final']
+                        : now()->toDateString();
+
+                    if (!empty($validated['hora_final'])) {
+                        $ordemservico->hora_final = Carbon::createFromFormat('H:i', $validated['hora_final'])->format('H:i:s');
+                    } else {
+                        $ordemservico->hora_final = now()->format('H:i:s');
+                    }
+
                     $ordemservico->tempo_total = $validated['tempo_total'] ?? null;
 
                     Log::info('Finalização manual', [

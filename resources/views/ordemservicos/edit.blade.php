@@ -610,6 +610,7 @@
         $('#valor_restricao').mask('#.###.##0,00', {reverse: true});
         $('#valor_total').mask('#.###.##0,00', {reverse: true});
 
+        let statusOriginal = $('#status').val();
 
         $('#valor_repassado_ajudantes').mask('#.###.##0,00', {reverse: true});
         $('#valor_repassado_motorista').mask('#.###.##0,00', {reverse: true});
@@ -684,6 +685,12 @@
             calcularTempoTotal();
         });
 
+
+        // Evento para hora final
+        $('#data_final').on('change', function() {
+            calcularTempoTotal();
+        });
+
         // Evento para confirmar a adição do ajudante
         $('#btnConfirmarAjudante').on('click', function() {
             const ajudanteId = $('#ajudante').val();
@@ -735,44 +742,46 @@
             }
         });
 
+        $('#status').off('change').on('change', function() {
 
-        $('#status').change(function() {
-
-            const status = $(this).val();
-            const now = new Date();
-
+            const novoStatus = $(this).val();
             const $dataFinal = $('#data_final');
             const $horaFinal = $('#hora_final');
 
+            if (novoStatus === "concluido") {
 
-            if (status === "concluido") {
-                // Faça algo específico para "Concluido"
+                $dataFinal.prop('disabled', false);
+                $horaFinal.prop('disabled', false);
 
-                //$('#campo_data_final, #campo_hora_final').removeClass('d-none');
+                const agora = new Date();
 
-                 // Preencher automaticamente
-                const hora = now.getHours().toString().padStart(2, '0');
-                const minuto = now.getMinutes().toString().padStart(2, '0');
-                const data = now.toISOString().split('T')[0];
+                // Data local correta
+                const ano = agora.getFullYear();
+                const mes = String(agora.getMonth() + 1).padStart(2, '0');
+                const dia = String(agora.getDate()).padStart(2, '0');
 
-                $dataFinal.val(data).prop('disabled', false);
-                $horaFinal.val(`${hora}:${minuto}`).prop('disabled', false);
+                const dataAtual = `${ano}-${mes}-${dia}`;
 
-                //toggleCamposFinalizacao(true);
+                // Hora local 24h
+                const hora = String(agora.getHours()).padStart(2, '0');
+                const minuto = String(agora.getMinutes()).padStart(2, '0');
 
+                const horaAtual = `${hora}:${minuto}`;
 
-                //setCurrentHoraFinal();
+                if (!$dataFinal.val()) {
+                    $dataFinal.val(dataAtual);
+                }
+
+                if (!$horaFinal.val()) {
+                    $horaFinal.val(horaAtual);
+                }
+
                 calcularTempoTotal();
+
             } else {
-                // Faça algo para outros status
-                //toggleCamposFinalizacao(false);
 
-                $dataFinal.prop('disabled', true).val('');
-                $horaFinal.prop('disabled', true).val('');
-                $('#tempo_total').val('');
-
-                setCurrentHoraFinal();
-                calcularTempoTotal();
+                $dataFinal.prop('disabled', true);
+                $horaFinal.prop('disabled', true);
             }
         });
 
@@ -947,13 +956,6 @@
 
         const observacoes = $('#observacoes').val().trim();
 
-        // Verificar se o campo de observações contém a frase obrigatória
-        //if (!observacoes.toLowerCase().includes('retirar em')) {
-        //    alert('⚠️ O campo ade observações está incompleto.\nÉ necessário conter as informações do serviço (Entrega/Retirada) para continuar.');
-        //    $('#observacoes').focus();
-        //    return;
-        //}
-
         const ordemServicoId = $('#ordem_servico_id').val();
         if (!ordemServicoId) {
             alert("Erro: ID da Ordem de Serviço não encontrado!");
@@ -1098,40 +1100,43 @@
         return parseFloat(valor.replace(/\./g, '').replace(',', '.')) || 0;
     }
 
-    function calcularTempoTotal() {
-        var serviceDateStr = $('#data_servico').val();
+    function calcularTempoTotal()
+    {
+
+        var dataInicioStr = $('#data_servico').val();
         var horaInicialStr = $('#hora_inicial').val();
+        var dataFimStr = $('#data_final').val();
         var horaFinalStr = $('#hora_final').val();
 
-        if (!serviceDateStr || !horaInicialStr || !horaFinalStr) {
+        if (!dataInicioStr || !horaInicialStr || !dataFimStr || !horaFinalStr) {
             $('#tempo_total').val('');
             return;
         }
 
-        var serviceDate = new Date(serviceDateStr);
-        if (isNaN(serviceDate.getTime())) {
-            console.error("Data do serviço inválida:", serviceDateStr);
+        var startDate = new Date(dataInicioStr + 'T' + horaInicialStr);
+        var endDate = new Date(dataFimStr + 'T' + horaFinalStr);
+
+        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+            console.error("Datas inválidas");
             $('#tempo_total').val('');
             return;
-        }
-
-        var startParts = horaInicialStr.split(':');
-        var startDate = new Date(serviceDate.getFullYear(), serviceDate.getMonth(), serviceDate.getDate(), parseInt(startParts[0]), parseInt(startParts[1]));
-
-        var finalParts = horaFinalStr.split(':');
-        var endDate = new Date(serviceDate.getFullYear(), serviceDate.getMonth(), serviceDate.getDate(), parseInt(finalParts[0]), parseInt(finalParts[1]));
-
-        // Se hora final for menor que a inicial, assume virada de dia
-        if (endDate < startDate) {
-            endDate.setDate(endDate.getDate() + 1);
         }
 
         var diffMs = endDate - startDate;
+
+        if (diffMs < 0) {
+            $('#tempo_total').val('00:00');
+            return;
+        }
+
         var diffMinutes = Math.floor(diffMs / 60000);
         var hours = Math.floor(diffMinutes / 60);
         var minutes = diffMinutes % 60;
 
-        var formattedTime = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2);
+        var formattedTime =
+            String(hours).padStart(2, '0') + ':' +
+            String(minutes).padStart(2, '0');
+
         $('#tempo_total').val(formattedTime);
     }
 
@@ -1219,7 +1224,10 @@
             url: "{{ route('ordemservicos.finalizar', ['ordemservico' => $ordemServico->id]) }}",
             method: "PATCH",
             data: {
-                _token: "{{ csrf_token() }}"
+                _token: "{{ csrf_token() }}",
+                data_final: $('#data_final').val(),
+                hora_final: $('#hora_final').val(),
+                tempo_total: $('#tempo_total').val()
             },
             success: function(response) {
                 window.location.href = "{{ route('ordemservicos.index') }}";
@@ -1272,7 +1280,7 @@
 
     var urlAjudantes = "{{ route('entregadores.entregadores') }}";
 
-    function validarHorarioRestricao(callback) {
+    /* function validarHorarioRestricao(callback) {
         const horaFinal = $('#hora_final').val();
         const valorRestricao = limparFormatoValor($('#valor_restricao').val());
 
@@ -1314,6 +1322,48 @@
 
         } else {
             callback(true); // ✅ tudo certo, segue normalmente
+        }
+    } */
+
+    function validarHorarioRestricao(callback) {
+
+        const horaFinal = $('#hora_final').val();
+        const valorRestricao = limparFormatoValor($('#valor_restricao').val());
+
+        if (!horaFinal) {
+            callback(true);
+            return;
+        }
+
+        const [hora, minuto] = horaFinal.split(':').map(Number);
+
+        const passouDoLimite =
+            hora > 16 || (hora === 16 && minuto >= 0);
+
+        if (passouDoLimite && valorRestricao <= 0) {
+
+            new bootstrap.Modal(document.getElementById('modalTaxaRestricao')).show();
+
+            $('#aceitarTaxa').off('click').on('click', function () {
+
+                $('#modalTaxaRestricao').modal('hide');
+
+                $('html, body').animate({
+                    scrollTop: $('#valor_restricao').offset().top - 100
+                }, 500, function () {
+                    $('#valor_restricao').focus().select();
+                });
+
+                // usuário precisará clicar novamente para finalizar
+            });
+
+            $('#recusarTaxa').off('click').on('click', function () {
+                $('#modalTaxaRestricao').modal('hide');
+                callback(true);
+            });
+
+        } else {
+            callback(true);
         }
     }
 
