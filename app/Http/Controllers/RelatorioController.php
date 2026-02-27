@@ -366,33 +366,36 @@ class RelatorioController extends Controller
 
     private function gerarRelatorioMotoristas(Request $request): \Illuminate\Support\Collection
     {
-        // Monta a query base com relacionamento do entregador
-        $query = ContaPagar::with('entregador')
-            ->whereNotNull('entregador_id');
+        // ✅ 1) Inicializa a query
+        $query = ContaPagar::query()
+            ->with('entregador')
+            ->whereNotNull('entregador_id')
+            ->whereHas('entregador', function ($q) {
+                $q->whereRaw("LOWER(perfil) = 'motorista'");
+            });
 
-        // Filtros de data (com base na data de criação ou vencimento)
+        // ✅ 2) Datas (ajuste o campo conforme sua regra: created_at / data_vencimento / data_pagamento)
         if ($request->filled('data_inicio')) {
-            $query->whereDate('created_at', '>=', $request->data_inicio);
+            $query->whereDate('data_servico', '>=', $request->data_inicio);
         }
 
         if ($request->filled('data_fim')) {
-            $query->whereDate('created_at', '<=', $request->data_fim);
+            $query->whereDate('data_servico', '<=', $request->data_fim);
         }
 
-        // Filtro por entregador específico
-        if ($request->filled('entregador_id')) {
-            $query->where('entregador_id', $request->entregador_id);
+        // ✅ 3) BUG do filtro: na blade vem motorista_id
+        if ($request->filled('motorista_id')) {
+            $query->where('entregador_id', $request->motorista_id);
         }
 
-        // Filtro por status do pagamento (opcional)
+        // ✅ 4) Status
         if ($request->filled('status_pagamento')) {
             $query->where('status_pagamento', $request->status_pagamento);
         }
 
-        // Busca os dados do banco
         $contas = $query->get();
 
-        // Agrupa por entregador e calcula os totais
+        // ✅ 5) Monta o relatório agrupado
         return $contas->groupBy('entregador_id')->map(function ($grupo) {
             $entregador = $grupo->first()->entregador;
 
@@ -402,7 +405,10 @@ class RelatorioController extends Controller
             return (object) [
                 'id' => $entregador->id ?? null,
                 'nome' => $entregador->nome ?? 'N/A',
-                'total_contas' => $grupo->count(),
+
+                // ⚠️ importante: a blade usa total_ordens
+                'total_ordens' => $grupo->count(),
+
                 'total_pago' => $total_pago,
                 'total_pendente' => $total_pendente,
             ];
