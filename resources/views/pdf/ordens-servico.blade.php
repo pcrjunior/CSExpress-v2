@@ -111,37 +111,67 @@
 
     <!-- Tabela de dados -->
     <table>
-        <thead>
+    <thead>
+        <tr>
+            <th style="width: 11%;">OS</th>
+            <th style="width: 9%;">Data</th>
+            <th style="width: 9%;">Status</th>
+            <th style="width: 14%;">Origem</th>
+            <th style="width: 14%;">Destino</th>
+            <th style="width: 14%;">Apelido</th>
+            <th style="width: 15%;">Motorista</th>
+            <th style="width: 7%;" class="text-end">Total (R$)</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach($ordens as $os)
             <tr>
-                <th style="width: 11%;">OS</th>
-                <th style="width: 9%;">Data</th>
-                <th style="width: 9%;">Status</th>
-                <th style="width: 14%;">Origem</th>
-                <th style="width: 14%;">Destino</th>
-                <th style="width: 14%;">Apelido</th>
-                <th style="width: 15%;">Motorista</th>
-                <th style="width: 7%;" class="text-end">Total (R$)</th>
-                <th style="width: 7%;" class="text-end">Resultado</th>
+                <td class="numero-os">{{ $os->numero_os ?? '-' }}</td>
+
+                <td>
+                    {{ $os->data_servico
+                        ? \Carbon\Carbon::parse($os->data_servico)->format('d/m/Y')
+                        : '-'
+                    }}
+                </td>
+
+                <td>
+                    {{ $os->status
+                        ? ucfirst(str_replace('_', ' ', $os->status))
+                        : '-'
+                    }}
+                </td>
+
+                <td>{{ optional($os->clienteOrigem)->nome ?? '-' }}</td>
+                <td>{{ optional($os->clienteDestino)->nome ?? '-' }}</td>
+
+                <td>
+                    {{ optional($os->clienteOrigem)->apelido ?? '-' }}
+                    /
+                    {{ optional($os->clienteDestino)->apelido ?? '-' }}
+                </td>
+
+                <td>{{ optional($os->motorista)->nome ?? '-' }}</td>
+
+                <td class="text-end">
+                    R$ {{ number_format($os->valor_total ?? 0, 2, ',', '.') }}
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach($ordens as $os)
-                <tr>
-                    <td class="numero-os">{{ $os->numero_os }}</td>
-                    <td>{{ \Carbon\Carbon::parse($os->data_servico)->format('d/m/Y') }}</td>
-                    <td>{{ ucfirst(str_replace('_', ' ', $os->status)) }}</td>
-                    <td>{{ $os->clienteOrigem->nome ?? '-' }}</td>
-                    <td>{{ $os->clienteDestino->nome ?? '-' }}</td>
-                    <td>{{ $os->clienteOrigem->apelido ?? '-' }} / {{ $os->clienteDestino->apelido ?? '-' }} </td>
-                    <td>{{ $os->motorista->nome ?? '-' }}</td>
-                    <td class="text-end">R$ {{ number_format($os->valor_total, 2, ',', '.') }}</td>
-                    <td class="text-end {{ $os->valor_repasse_resultado >= 0 ? 'text-success' : 'text-danger' }}">
-                        R$ {{ number_format($os->valor_repasse_resultado, 2, ',', '.') }}
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+        @endforeach
+    </tbody>
+
+    <tfoot>
+        <tr style="background-color:#f2f2f2;">
+            <td colspan="7" class="text-end text-bold">
+                TOTAL GERAL:
+            </td>
+            <td class="text-end text-bold">
+                R$ {{ number_format($totalGeral ?? 0, 2, ',', '.') }}
+            </td>
+        </tr>
+    </tfoot>
+</table>
 
     <!-- Rodapé -->
     <footer>

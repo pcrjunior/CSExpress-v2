@@ -136,7 +136,7 @@
                             <th>Motorista</th>
                             <th>Observações</th>
                             <th class="text-end">Valor Total</th>
-                            <th class="text-end">Resultado</th>
+                            <!--<th class="text-end">Resultado</th>-->
                         </tr>
                     </thead>
                     <tbody>
@@ -172,14 +172,14 @@
 
                                 <td>{{ optional($os->motorista)->nome ?? '-' }}</td>
 
-                                <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     {{ $os->observacoes ?? '-' }}
                                 </td>
 
                                 <td class="text-end">R$ {{ number_format($os->valor_total, 2, ',', '.') }}</td>
-                                <td class="text-end fw-bold text-{{ $os->valor_resultado >= 0 ? 'success' : 'danger' }}">
+                                <!-- <td class="text-end fw-bold text-{{ $os->valor_resultado >= 0 ? 'success' : 'danger' }}">
                                     R$ {{ number_format($os->valor_repasse_resultado, 2, ',', '.') }}
-                                </td>
+                                </td> -->
                             </tr>
                         @empty
                             <tr>
@@ -198,9 +198,9 @@
                             <td class="text-end">
                                 R$ {{ number_format($somaTotal, 2, ',', '.') }}
                             </td>
-                            <td class="text-end {{ $somaResultado >= 0 ? 'text-success' : 'text-danger' }}">
+                            <!-- <td class="text-end {{ $somaResultado >= 0 ? 'text-success' : 'text-danger' }}">
                                 R$ {{ number_format($somaResultado, 2, ',', '.') }}
-                            </td>
+                            </td> -->
                         </tr>
                     </tfoot>
                 </table>

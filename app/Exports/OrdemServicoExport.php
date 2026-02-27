@@ -92,7 +92,6 @@ class OrdemServicoExport implements
                 'Motorista'   => $os->motorista->nome ?? '-',
                 'Observações' => $os->observacoes ?? '-',
                 'Valor Total' => $os->valor_total ?? 0,
-                'Resultado'   => $os->valor_repasse_resultado ?? 0,
             ];
         });
 
@@ -107,7 +106,6 @@ class OrdemServicoExport implements
             'Motorista'   => 'TOTAL GERAL:',
             'Observações' => '',
             'Valor Total' => $somaTotal,
-            'Resultado'   => $somaResultado,
         ]);
 
         return $dados;
@@ -125,7 +123,6 @@ class OrdemServicoExport implements
             'Motorista',
             'Observações',
             'Valor Total',
-            'Resultado'
         ];
     }
 
@@ -134,7 +131,6 @@ class OrdemServicoExport implements
         return [
             'A' => NumberFormat::FORMAT_TEXT,
             'I' => '#,##0.00',
-            'J' => '#,##0.00',
         ];
     }
 
@@ -152,11 +148,11 @@ class OrdemServicoExport implements
               ->getFont()
               ->setBold(true);
 
-        // Linha divisória acima do TOTAL
+    /*     // Linha divisória acima do TOTAL
         $sheet->getStyle('A' . ($highestRow - 1) . ':J' . ($highestRow - 1))
               ->getBorders()
               ->getBottom()
-              ->setBorderStyle(Border::BORDER_THIN);
+              ->setBorderStyle(Border::BORDER_THIN); */
 
         return [];
     }

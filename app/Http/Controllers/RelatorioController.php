@@ -463,6 +463,10 @@ class RelatorioController extends Controller
 
     public function exportarOSPDF(Request $request)
     {
+
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
+
         $query = OrdemServico::with(['clienteOrigem', 'clienteDestino', 'motorista', 'empresa', 'ajudantes']);
 
         if ($request->filled('data_inicio') && $request->filled('data_fim')) {
@@ -477,21 +481,12 @@ class RelatorioController extends Controller
             $query->where('motorista_id', $request->entregador_id);
         }
 
-        // ✅ NOVO: Filtro unificado de cliente
         if ($request->filled('cliente_id')) {
             $query->where(function($q) use ($request) {
                 $q->where('cliente_origem_id', $request->cliente_id)
                 ->orWhere('cliente_destino_id', $request->cliente_id);
             });
         }
-
-        // ❌ REMOVER: Filtros separados
-        // if ($request->filled('cliente_origem_id')) {
-        //     $query->where('cliente_origem_id', $request->cliente_origem_id);
-        // }
-        // if ($request->filled('cliente_destino_id')) {
-        //     $query->where('cliente_destino_id', $request->cliente_destino_id);
-        // }
 
         if ($request->filled('cliente_apelido')) {
             $query->where(function ($q) use ($request) {
@@ -503,17 +498,25 @@ class RelatorioController extends Controller
             });
         }
 
-        if ($request->filled('ajudante_id')) {
-            $query->whereHas('ajudantes', function ($q) use ($request) {
-                $q->where('entregadores.id', $request->ajudante_id);
-            });
+        $totalRegistros = $query->count();
+
+        if ($totalRegistros > 1500) {
+            return back()->with('error',
+                'Muitos registros para PDF. Utilize exportação em Excel.'
+            );
         }
 
         $ordens = $query->latest()->get();
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.ordens-servico', compact('ordens'));
+        $totalGeral = $ordens->sum('valor_total');
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.ordens-servico', [
+            'ordens' => $ordens,
+            'totalGeral' => $totalGeral
+        ]);
 
         return $pdf->download('relatorio-ordens-servico.pdf');
+
     }
 
     public function exportarClientesAtendidosPDF(Request $request)
