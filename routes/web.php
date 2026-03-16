@@ -96,6 +96,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('clientes.listar_todos');
     Route::get('/clientes/{clienteId}/dados', [ClienteController::class, 'getDadosCliente'])
         ->name('clientes.dados');
+    Route::get('/clientes/{cliente}/responsaveis',  [ClienteController::class, 'responsaveis']
+        )->name('clientes.responsaveis');
 
     // Resource completo
     Route::resource('clientes', ClienteController::class);
@@ -104,6 +106,9 @@ Route::middleware(['auth'])->group(function () {
     // Clientes Avulsos
     Route::post('/clientes/avulso', [ClienteController::class, 'storeAvulso'])
         ->name('clientes.avulso.store');
+
+    Route::post('/clientes/{cliente}/responsaveis',[ClienteController::class, 'storeResponsavel']
+    )->name('clientes.responsaveis.store');
 
 
     // ========================================================================

@@ -117,135 +117,380 @@
 
                             <!-- Clientes Origem e Destino -->
                             <div class="row">
+
+                                <!-- ================= ORIGEM ================= -->
                                 <div class="col-md-6">
-                                    <div class="card mb-3">
-                                        <div class="card-header bg-header-blue">Cliente Origem</div>
+                                    <div class="card mb-3 shadow-sm">
+                                        <div class="card-header bg-header-blue text-white">
+                                            Cliente Origem
+                                        </div>
+
                                         <div class="card-body">
+
+                                            <!-- Busca Cliente -->
                                             <div class="mb-3">
-                                                <label for="cliente_origem" class="form-label required">Cliente</label>
-                                                <select class="form-select" id="cliente_origem" name="cliente_origem_id" required>
-                                                    <option value="">Selecione o cliente de origem</option>
-                                                    @forelse($clientes as $cliente)
-                                                        <option value="{{ $cliente->id }}" data-apelido="{{ $cliente->apelido }}"
-                                                            {{ $ordemServico->cliente_origem_id == $cliente->id ? 'selected' : '' }}>
-                                                            {{ $cliente->nome }} {{ $cliente->apelido ? "({$cliente->apelido})" : '' }}
-                                                        </option>
-                                                    @empty
-                                                        <option value="">Nenhum cliente encontrado</option>
-                                                    @endforelse
-                                                </select>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="responsavel_origem" class="form-label">Responsável</label>
-                                                        <input type="text" class="form-control" id="responsavel_origem" name="responsavel_origem" readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="telefone_origem" class="form-label">Telefone</label>
-                                                        <input type="text" class="form-control" id="telefone_origem" name="telefone_origem" readonly>
-                                                    </div>
+                                                <div class="input-group">
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="busca_cliente_origem"
+                                                        name="busca_cliente_origem"
+                                                        placeholder="Buscar por apelido do cliente">
+
+                                                    <button class="btn btn-outline-secondary"
+                                                            type="button"
+                                                            id="btn_buscar_origem">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-outline-primary"
+                                                            type="button"
+                                                            id="btn_recarregar_clientes_origem">
+                                                        <i class="fas fa-sync-alt"></i>
+                                                    </button>
                                                 </div>
                                             </div>
+
+                                            <!-- Select Cliente -->
                                             <div class="mb-3">
-                                                <label for="email_origem" class="form-label">E-mail</label>
-                                                <input type="email" class="form-control" id="email_origem" name="email_origem" readonly>
+                                                <label class="form-label">Cliente</label>
+
+                                                <div class="input-group">
+
+                                                    <select class="form-select"
+                                                            id="cliente_origem"
+                                                            name="cliente_origem_id"
+                                                            required>
+
+                                                        <option value="">Selecione o cliente de origem</option>
+
+                                                        @foreach($clientes as $cliente)
+                                                            <option value="{{ $cliente->id }}"
+                                                                    data-apelido="{{ $cliente->apelido }}"
+                                                                    {{ $ordemServico->cliente_origem_id == $cliente->id ? 'selected' : '' }}>
+                                                                {{ $cliente->nome }} {{ $cliente->apelido ? "({$cliente->apelido})" : '' }}
+                                                            </option>
+                                                        @endforeach
+
+                                                    </select>
+
+                                                    <button type="button"
+                                                            class="btn btn-outline-primary"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalClienteAvulso_Origem"
+                                                            title="Cadastrar cliente avulso">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+
+                                                </div>
                                             </div>
+
+                                            <!-- Endereço -->
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
-                                                        <label for="cep_origem" class="form-label">CEP</label>
-                                                        <input type="text" class="form-control" id="cep_origem" name="cep_origem" readonly>
+                                                        <label class="form-label">CEP</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            id="cep_origem"
+                                                            name="cep_origem"
+                                                            value="{{ $ordemServico->cep_origem ?? '' }}"
+                                                            readonly>
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-7">
                                                     <div class="mb-3">
-                                                        <label for="endereco_origem" class="form-label">Endereço</label>
-                                                        <input type="text" class="form-control" id="endereco_origem" name="endereco_origem" readonly>
+                                                        <label class="form-label">Endereço</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            id="endereco_origem"
+                                                            name="endereco_origem"
+                                                            value="{{ $ordemServico->endereco_origem ?? '' }}"
+                                                            readonly>
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-2">
-                                                    <div class="mb-2">
-                                                        <label for="numero_origem" class="form-label">Nº</label>
-                                                        <input type="text" class="form-control" id="numero_origem" name="numero_origem" readonly>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Nº</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            id="numero_origem"
+                                                            name="numero_origem"
+                                                            value="{{ $ordemServico->numero_origem ?? '' }}"
+                                                            readonly>
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <!-- Cidade -->
                                             <div class="mb-3">
-                                                <label for="cidade_uf_origem" class="form-label">Cidade/UF</label>
-                                                <input type="text" class="form-control" id="cidade_uf_origem" name="cidade_uf_origem" readonly>
+                                                <label class="form-label">Cidade/UF</label>
+                                                <input type="text"
+                                                    class="form-control"
+                                                    id="cidade_uf_origem"
+                                                    name="cidade_uf_origem"
+                                                    value="{{ $ordemServico->cidade_uf_origem ?? '' }}"
+                                                    readonly>
                                             </div>
+
+                                            <!-- Responsável -->
+                                            <div class="mb-3">
+                                                <label class="form-label">Responsável</label>
+
+                                                <div class="input-group">
+
+                                                    <select name="responsavel_origem_id"
+                                                            id="responsavel_origem_id"
+                                                            class="form-select">
+
+                                                        <option value="">Selecione o responsável</option>
+
+                                                    </select>
+
+                                                    <button type="button"
+                                                            class="btn btn-outline-primary"
+                                                            id="btnNovoResponsavelOrigem"
+                                                            title="Cadastrar novo responsável">
+                                                        <i class="fas fa-user-plus"></i>
+                                                    </button>
+
+                                                </div>
+                                            </div>
+
+                                            <!-- Telefone / Email -->
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Telefone</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            id="telefone_origem"
+                                                            name="telefone_origem"
+                                                            value="{{ $ordemServico->telefone_origem ?? '' }}"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">E-mail</label>
+                                                        <input type="email"
+                                                            class="form-control"
+                                                            id="email_origem"
+                                                            name="email_origem"
+                                                            value="{{ $ordemServico->email_origem ?? '' }}"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
 
+
+                                <!-- ================= DESTINO ================= -->
                                 <div class="col-md-6">
-                                    <div class="card mb-3">
-                                        <div class="card-header bg-header-blue">Cliente Destino</div>
+                                    <div class="card mb-3 shadow-sm">
+
+                                        <div class="card-header bg-header-blue text-white">
+                                            Cliente Destino
+                                        </div>
+
                                         <div class="card-body">
+
+                                            <!-- Busca Cliente -->
                                             <div class="mb-3">
-                                                <label for="cliente_destino" class="form-label required">Cliente</label>
-                                                <select class="form-select" id="cliente_destino" name="cliente_destino_id" required>
-                                                    <option value="">Selecione o cliente de destino</option>
-                                                    @forelse($clientes as $cliente)
-                                                        <option value="{{ $cliente->id }}" data-apelido="{{ $cliente->apelido }}"
-                                                            {{ $ordemServico->cliente_destino_id == $cliente->id ? 'selected' : '' }}>
-                                                            {{ $cliente->nome }} {{ $cliente->apelido ? "({$cliente->apelido})" : '' }}
-                                                        </option>
-                                                    @empty
-                                                        <option value="">Nenhum cliente encontrado</option>
-                                                    @endforelse
-                                                </select>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="responsavel_destino" class="form-label">Responsável</label>
-                                                        <input type="text" class="form-control" id="responsavel_destino" name="responsavel_destino" readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="telefone_destino" class="form-label">Telefone</label>
-                                                        <input type="text" class="form-control" id="telefone_destino" name="telefone_destino" readonly>
-                                                    </div>
+                                                <div class="input-group">
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="busca_cliente_destino"
+                                                        name="busca_cliente_destino"
+                                                        placeholder="Buscar por apelido do cliente">
+
+                                                    <button class="btn btn-outline-secondary"
+                                                            type="button"
+                                                            id="btn_buscar_destino">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-outline-primary"
+                                                            type="button"
+                                                            id="btn_recarregar_clientes_destino">
+                                                        <i class="fas fa-sync-alt"></i>
+                                                    </button>
                                                 </div>
                                             </div>
+
+                                            <!-- Select Cliente -->
                                             <div class="mb-3">
-                                                <label for="email_destino" class="form-label">E-mail</label>
-                                                <input type="email" class="form-control" id="email_destino" name="email_destino" readonly>
+
+                                                <label class="form-label">Cliente</label>
+
+                                                <div class="input-group">
+
+                                                    <select class="form-select"
+                                                            id="cliente_destino"
+                                                            name="cliente_destino_id"
+                                                            required>
+
+                                                        <option value="">Selecione o cliente de destino</option>
+
+                                                        @foreach($clientes as $cliente)
+                                                            <option value="{{ $cliente->id }}"
+                                                                    data-apelido="{{ $cliente->apelido }}"
+                                                                    {{ $ordemServico->cliente_destino_id == $cliente->id ? 'selected' : '' }}>
+                                                                {{ $cliente->nome }} {{ $cliente->apelido ? "({$cliente->apelido})" : '' }}
+                                                            </option>
+                                                        @endforeach
+
+                                                    </select>
+
+                                                    <button type="button"
+                                                            class="btn btn-outline-primary"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalClienteAvulso_Destino"
+                                                            title="Cadastrar cliente avulso">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+
+                                                </div>
+
                                             </div>
+
+                                            <!-- Endereço -->
                                             <div class="row">
+
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
-                                                        <label for="cep_destino" class="form-label">CEP</label>
-                                                        <input type="text" class="form-control" id="cep_destino" name="cep_destino" readonly>
+                                                        <label class="form-label">CEP</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            id="cep_destino"
+                                                            name="cep_destino"
+                                                            value="{{ $ordemServico->cep_destino ?? '' }}"
+                                                            readonly>
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-7">
                                                     <div class="mb-3">
-                                                        <label for="endereco_destino" class="form-label">Endereço</label>
-                                                        <input type="text" class="form-control" id="endereco_destino" name="endereco_destino" readonly>
+                                                        <label class="form-label">Endereço</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            id="endereco_destino"
+                                                            name="endereco_destino"
+                                                            value="{{ $ordemServico->endereco_destino ?? '' }}"
+                                                            readonly>
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-2">
-                                                    <div class="mb-2">
-                                                        <label for="numero_destino" class="form-label">Nº</label>
-                                                        <input type="text" class="form-control" id="numero_destino" name="numero_destino" readonly>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Nº</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            id="numero_destino"
+                                                            name="numero_destino"
+                                                            value="{{ $ordemServico->numero_destino ?? '' }}"
+                                                            readonly>
                                                     </div>
                                                 </div>
+
                                             </div>
+
+                                            <!-- Cidade -->
                                             <div class="mb-3">
-                                                <label for="cidade_uf_destino" class="form-label">Cidade/UF</label>
-                                                <input type="text" class="form-control" id="cidade_uf_destino" name="cidade_uf_destino" readonly>
+                                                <label class="form-label">Cidade/UF</label>
+                                                <input type="text"
+                                                    class="form-control"
+                                                    id="cidade_uf_destino"
+                                                    name="cidade_uf_destino"
+                                                    value="{{ $ordemServico->cidade_uf_destino ?? '' }}"
+                                                    readonly>
                                             </div>
+
+                                            <!-- Responsável -->
+                                            <div class="mb-3">
+
+                                                <label class="form-label">Responsável</label>
+
+                                                <div class="input-group">
+
+                                                    <select name="responsavel_destino_id"
+                                                            id="responsavel_destino_id"
+                                                            class="form-select">
+
+                                                        <option value="">Selecione o responsável</option>
+
+                                                    </select>
+
+                                                    <button type="button"
+                                                            class="btn btn-outline-primary"
+                                                            id="btnNovoResponsavelDestino"
+                                                            title="Cadastrar novo responsável">
+                                                        <i class="fas fa-user-plus"></i>
+                                                    </button>
+
+                                                </div>
+
+                                            </div>
+
+                                            <!-- Telefone / Email -->
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Telefone</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            id="telefone_destino"
+                                                            name="telefone_destino"
+                                                            value="{{ $ordemServico->telefone_destino ?? '' }}"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">E-mail</label>
+                                                        <input type="email"
+                                                            class="form-control"
+                                                            id="email_destino"
+                                                            name="email_destino"
+                                                            value="{{ $ordemServico->email_destino ?? '' }}"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
-                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     </div>
 
                     <!-- Informações do Serviço -->
@@ -583,6 +828,8 @@
     </div>
 </div>
 
+
+
 @endsection
 
 @push('scripts')
@@ -632,8 +879,12 @@
             const clienteId = $(this).val();
             if (clienteId) {
                 CarregarDetalhesClientes('origem', clienteId);
+                carregarResponsaveis('origem', clienteId);
             } else {
                 limparDetalhesClientes('origem');
+                $('#responsavel_origem_id').empty().append('<option value="">Selecione o responsavel</option>');
+                $('#telefone_origem').val('');
+                $('#email_origem').val('');
             }
         });
 
@@ -642,8 +893,12 @@
             const clienteId = $(this).val();
             if (clienteId) {
                 CarregarDetalhesClientes('destino', clienteId);
+                carregarResponsaveis('destino', clienteId);
             } else {
                 limparDetalhesClientes('destino');
+                $('#responsavel_destino_id').empty().append('<option value="">Selecione o responsavel</option>');
+                $('#telefone_destino').val('');
+                $('#email_destino').val('');
             }
         });
 
@@ -676,7 +931,8 @@
             $('#valor_ajudante').val('');
             $('#valor_repassado_aj').val('');
 
-            $('#modalAjudante').modal('show');
+            const modalAjudante = new bootstrap.Modal(document.getElementById('modalAjudante'));
+            modalAjudante.show();
 
         });
 
@@ -717,7 +973,7 @@
             }
 
             adicionarAjudanteTabela(ajudanteId, nome, telefone, valor, valorRepassado);
-            $('#modalAjudante').modal('hide');
+            bootstrap.Modal.getInstance(document.getElementById('modalAjudante')).hide();
 
             atualizarObservacoesAuto();
 
@@ -806,10 +1062,12 @@
         // Carregar detalhes dos clientes
         if ($('#cliente_origem').val()) {
             CarregarDetalhesClientes('origem', $('#cliente_origem').val());
+            carregarResponsaveis('origem', $('#cliente_origem').val(), {{ $ordemServico->responsavel_origem_id ?? 'null' }});
         }
 
         if ($('#cliente_destino').val()) {
             CarregarDetalhesClientes('destino', $('#cliente_destino').val());
+            carregarResponsaveis('destino', $('#cliente_destino').val(), {{ $ordemServico->responsavel_destino_id ?? 'null' }});
         }
 
         // Carregar veículos do motorista selecionado
@@ -1458,6 +1716,198 @@
             btnSalvar.prop('disabled', false).html('Salvar');
         });
     });
+
+
+let tipoResponsavelAtual = null;
+
+    $(document).on('click', '#btnNovoResponsavelOrigem', function () {
+
+        const clienteId = $('#cliente_origem').val();
+
+        if (!clienteId) {
+            alert('Selecione o cliente antes de cadastrar um responsável.');
+            return;
+        }
+        tipoResponsavelAtual = 'origem';
+
+        $('#cliente_id_modal').val(clienteId);
+
+        $('#novo_nome').val('');
+        $('#novo_telefone').val('');
+        $('#novo_email').val('');
+
+        const modalElement = document.getElementById('modalNovoResponsavel');
+
+        let modal = bootstrap.Modal.getInstance(modalElement);
+
+        if (!modal) {
+            modal = new bootstrap.Modal(modalElement);
+        }
+
+        modal.show();
+    });
+
+    var behavior = function (val) {
+        return val.replace(/\D/g, '').length === 11
+            ? '(00) 00000-0000'
+                : '(00) 0000-00009';
+        };
+
+        var options = {
+            onKeyPress: function(val, e, field, options) {
+                field.mask(behavior.apply({}, arguments), options);
+            }
+    };
+
+
+    $(document).on('click', '#btnNovoResponsavelDestino', function () {
+
+        const clienteId = $('#cliente_destino').val();
+
+        if (!clienteId) {
+            alert('Selecione o cliente antes de cadastrar um responsável.');
+            return;
+        }
+        tipoResponsavelAtual = 'destino';
+
+        $('#cliente_id_modal').val(clienteId);
+
+        $('#novo_nome').val('');
+        $('#novo_telefone').val('');
+        $('#novo_email').val('');
+
+        const modalElement = document.getElementById('modalNovoResponsavel');
+
+        let modal = bootstrap.Modal.getInstance(modalElement);
+
+        if (!modal) {
+            modal = new bootstrap.Modal(modalElement);
+        }
+        modal.show();
+    });
+
+    $(document).on('click', '#btnSalvarNovoResponsavel', function () {
+        console.log('clicou salvar');
+
+        const clienteId = $('#cliente_id_modal').val();
+
+        console.log('cliente enviado para modal:', clienteId);
+
+        $.ajax({
+            url: `/clientes/${clienteId}/responsaveis`,
+            method: 'POST',
+            data: {
+                nome: $('#novo_nome').val(),
+                telefone: $('#novo_telefone').val(),
+                email: $('#novo_email').val(),
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (resp) {
+
+                const select = tipoResponsavelAtual === 'origem'
+                    ? $('#responsavel_origem_id')
+                    : $('#responsavel_destino_id');
+
+                select.append(`
+                    <option value="${resp.id}"
+                        data-telefone="${resp.telefone || ''}"
+                        data-email="${resp.email || ''}"
+                        selected>
+                        ${resp.nome}
+                    </option>
+                `);
+
+                select.trigger('change');
+
+                const modalId = 'modalNovoResponsavel';
+
+                const modal = bootstrap.Modal.getInstance(
+                    document.getElementById(modalId)
+                );
+
+                if (modal) modal.hide();
+            },
+            error: function (xhr) {
+                console.log({
+                    clienteId: clienteId,
+                    nome: $('#novo_nome').val(),
+                    telefone: $('#novo_telefone').val(),
+                    email: $('#novo_email').val()
+                });
+
+                console.error(xhr.responseText);
+                alert('Erro ao salvar responsável.');
+            }
+        });
+    });
+
+
+    /**
+     * Carrega os responsáveis de um cliente no select correspondente
+     * @param {string} tipo - 'origem' ou 'destino'
+     * @param {int} clienteId
+     * @param {int|null} selecionarId - id do responsável a pré-selecionar (usado na edição)
+     */
+    function carregarResponsaveis(tipo, clienteId, selecionarId = null) {
+        const select = $('#responsavel_' + tipo + '_id');
+
+        select.empty().append('<option value="">Selecione o responsavel</option>');
+        $('#telefone_' + tipo).val('');
+        $('#email_' + tipo).val('');
+
+        if (!clienteId) return;
+
+        $.get(`/clientes/${clienteId}/responsaveis`, function(data) {
+            data.forEach(function(resp) {
+                select.append(`<option value="${resp.id}"
+                    data-telefone="${resp.telefone || ''}"
+                    data-email="${resp.email || ''}">
+                    ${resp.nome}
+                </option>`);
+            });
+
+            // Pré-seleciona o responsável salvo (apenas na edição)
+            if (selecionarId) {
+                select.val(selecionarId).trigger('change');
+            }
+        }).fail(function(xhr) {
+            console.error('Erro ao carregar responsaveis:', xhr.responseText);
+        });
+    }
+
+    // Preenche telefone/email ao selecionar responsável origem
+    $(document).on('change', '#responsavel_origem_id', function() {
+        const selected = $(this).find(':selected');
+        $('#telefone_origem').val(selected.data('telefone') || '');
+        $('#email_origem').val(selected.data('email') || '');
+    });
+
+    // Preenche telefone/email ao selecionar responsável destino
+    $(document).on('change', '#responsavel_destino_id', function() {
+        const selected = $(this).find(':selected');
+        $('#telefone_destino').val(selected.data('telefone') || '');
+        $('#email_destino').val(selected.data('email') || '');
+    });
+
+    $(document).on('shown.bs.modal', '#modalNovoResponsavel', function () {
+
+        var behavior = function (val) {
+            return val.replace(/\D/g, '').length === 11
+                ? '(00) 00000-0000'
+                : '(00) 0000-00009';
+        };
+
+        var options = {
+            onKeyPress: function(val, e, field, options) {
+                field.mask(behavior.apply({}, arguments), options);
+            }
+        };
+
+        $('#novo_telefone').mask(behavior, options);
+
+    });
+
+
 
 </script>
 

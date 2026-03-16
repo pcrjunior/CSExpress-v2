@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
+
 
 class Cliente extends Model
 {
@@ -65,4 +67,11 @@ class Cliente extends Model
     {
         $this->attributes['apelido'] = trim(preg_replace('/\s+/', ' ', $value)); // remove espaços duplicados
     }
+
+    public function responsaveis()
+    {
+        return $this->hasMany(ClienteResponsavel::class, 'cliente_id');
+    }
+
+
 }

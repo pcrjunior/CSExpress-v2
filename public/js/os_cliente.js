@@ -12,9 +12,9 @@ function CarregarDetalhesClientes(tipo, clienteId) {
         dataType: 'json',
         success: function(data) {
             if (data && data.cliente) {
-                $('#responsavel_' + tipo).val(data.cliente.responsavel);
-                $('#telefone_' + tipo).val(data.cliente.telefone);
-                $('#email_' + tipo).val(data.cliente.email);
+                //$('#responsavel_' + tipo).val(data.cliente.responsavel);
+                //$('#telefone_' + tipo).val(data.cliente.telefone);
+                //$('#email_' + tipo).val(data.cliente.email);
                 $('#cep_' + tipo).val(data.cliente.cep);
                 $('#endereco_' + tipo).val(data.cliente.endereco);
                 $('#cidade_uf_' + tipo).val(data.cliente.cidade_uf);
@@ -87,64 +87,6 @@ function limparDetalhesClientesAvulso() {
     $('#endereco_avulso_destino').val('');
     $('#numero_avulso_destino').val('');
 }
-
-/* // Função para fechar modal e garantir limpeza do backdrop
-function fecharModalClienteAvulso_Destino() {
-    const modalElement = document.getElementById('modalClienteAvulso_Destino');
-    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-
-    if (modalInstance) {
-        modalInstance.hide();
-    }
-
-    // Força a remoção do backdrop após um delay
-    setTimeout(function() {
-        // Remove todos os backdrops
-        $('.modal-backdrop').remove();
-
-        // Remove classes do body
-        $('body').removeClass('modal-open');
-        $('body').css({
-            'overflow': '',
-            'padding-right': ''
-        });
-
-        // Limpa o formulário
-        $('#formClienteAvulso_Destino')[0].reset();
-        limparDetalhesClientesAvulso();
-
-        console.log('Modal fechado e limpo');
-    }, 200);
-} */
-
-/* function fecharModalClienteAvulso_Origem() {
-     const modalElement = document.getElementById('modalClienteAvulso_Origem');
-     const modalInstance = bootstrap.Modal.getInstance(modalElement);
-
-     if (modalInstance) {
-         modalInstance.hide();
-     }
-
-     // Força a remoção do backdrop após um delay
-     setTimeout(function() {
-         // Remove todos os backdrops
-         $('.modal-backdrop').remove();
-
-         // Remove classes do body
-         $('body').removeClass('modal-open');
-         $('body').css({
-             'overflow': '',
-             'padding-right': ''
-         });
-
-         // Limpa o formulário
-         $('#formClienteAvulso_Origem')[0].reset();
-         limparDetalhesClientesAvulso();
-
-         //console.log('Modal fechado e limpo');
-     }, 200);
-}
- */
 
 
 function adicionarCliente_Origem(cliente) {

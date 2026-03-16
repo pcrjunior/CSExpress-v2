@@ -484,15 +484,15 @@ class OrdemServicoController extends Controller
         if ($validated['status'] === 'concluido') {
 
             if ($request->filled('hora_final')) {
-                $ordemservico->hora_final = $request->hora_final;
+                $ordemServico->hora_final = $request->hora_final;
             } else {
-                $ordemservico->hora_final = now()->format('H:i:s');
+                $ordemServico->hora_final = now()->format('H:i:s');
             }
 
             if ($request->filled('data_final')) {
-                $ordemservico->data_final = $request->data_final;
+                $ordemServico->data_final = $request->data_final;
             } else {
-                $ordemservico->data_final = now()->toDateString();
+                $ordemServico->data_final = now()->toDateString();
             }
 
 

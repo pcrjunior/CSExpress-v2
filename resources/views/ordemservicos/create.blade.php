@@ -66,159 +66,323 @@
                         <div class="row">
                             <!-- Cliente Origem -->
                             <div class="col-md-6">
-                                <div class="card mb-2">
-                                    <div class="card-header bg-header-blue">Cliente Origem</div>
+                                <div class="card mb-3 shadow-sm">
+                                    <div class="card-header bg-header-blue text-white">
+                                        Cliente Origem
+                                    </div>
+
                                     <div class="card-body">
+
+                                        <!-- Busca Cliente -->
                                         <div class="mb-3">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" id="busca_cliente_origem" name="busca_cliente_origem" placeholder="Buscar por apelido do cliente">
-                                                <button class="btn btn-outline-secondary" type="button" id="btn_buscar_origem">
-                                                    <i class="fas fa-search"></i> Buscar
+                                                <input type="text"
+                                                    class="form-control"
+                                                    id="busca_cliente_origem"
+                                                    name="busca_cliente_origem"
+                                                    placeholder="Buscar por apelido do cliente">
+
+                                                <button class="btn btn-outline-secondary"
+                                                        type="button"
+                                                        id="btn_buscar_origem">
+                                                    <i class="fas fa-search"></i>
                                                 </button>
-                                                <button class="btn btn-outline-primary" type="button" id="btn_recarregar_clientes_origem">
-                                                    <i class="fas fa-sync-alt"></i> Limpar
+
+                                                <button class="btn btn-outline-primary"
+                                                        type="button"
+                                                        id="btn_recarregar_clientes_origem">
+                                                    <i class="fas fa-sync-alt"></i>
                                                 </button>
                                             </div>
+                                        </div>
 
-                                            <div class="d-flex gap-2 mt-2 align-items-center">
-                                                <select class="form-select mt-2" id="cliente_origem" name="cliente_origem_id" required>
+                                        <!-- Select Cliente -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Cliente</label>
+                                            <div class="input-group">
+                                                <select class="form-select"
+                                                        id="cliente_origem"
+                                                        name="cliente_origem_id"
+                                                        required>
                                                     <option value="">Selecione o cliente de origem</option>
                                                 </select>
 
-                                                <!-- Botão para abrir o modal -->
-                                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalClienteAvulso_Origem">
+                                                <button type="button"
+                                                        class="btn btn-outline-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalClienteAvulso_Origem"
+                                                        title="Cadastrar cliente avulso">
                                                     <i class="fas fa-plus"></i>
                                                 </button>
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="responsavel_origem" class="form-label">Responsável</label>
-                                                    <input type="text" class="form-control" id="responsavel_origem" name="responsavel_origem" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="telefone_origem" class="form-label">Telefone</label>
-                                                    <input type="text" class="form-control" id="telefone_origem" name="telefone_origem" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="email_origem" class="form-label">E-mail</label>
-                                            <input type="email" class="form-control" id="email_origem" name="email_origem" readonly>
-                                        </div>
+                                        <!-- Endereço -->
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <div class="mb-3">
                                                     <label for="cep_origem" class="form-label">CEP</label>
-                                                    <input type="text" class="form-control" id="cep_origem" name="cep_origem" readonly>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="cep_origem"
+                                                        name="cep_origem"
+                                                        readonly>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-7">
                                                 <div class="mb-3">
-                                                    <label for="endereco_origem" class="form-label">Endereço</label>
-                                                    <input type="text" class="form-control" id="endereco_origem" name="endereco_origem" readonly>
+                                                    <label for="endereco_origem" class="form-label">
+                                                        Endereço
+                                                    </label>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="endereco_origem"
+                                                        name="endereco_origem"
+                                                        readonly>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-2">
-                                                <div class="mb-2">
+                                                <div class="mb-3">
                                                     <label for="numero_origem" class="form-label">Nº</label>
-                                                    <input type="text" class="form-control" id="numero_origem" name="numero_origem" readonly>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="numero_origem"
+                                                        name="numero_origem"
+                                                        readonly>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <!-- Cidade -->
                                         <div class="mb-3">
-                                            <label for="cidade_uf_origem" class="form-label">Cidade/UF</label>
-                                            <input type="text" class="form-control" id="cidade_uf_origem" name="cidade_uf_origem" readonly>
+                                            <label for="cidade_uf_origem" class="form-label">
+                                                Cidade/UF
+                                            </label>
+                                            <input type="text"
+                                                class="form-control"
+                                                id="cidade_uf_origem"
+                                                name="cidade_uf_origem"
+                                                readonly>
                                         </div>
+
+
+                                        <!-- Select Responsável -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Responsável</label>
+                                            <div class="input-group">
+                                                <select name="responsavel_origem_id"
+                                                        id="responsavel_origem_id"
+                                                        class="form-select">
+                                                    <option value="">Selecione o responsável</option>
+                                                </select>
+
+                                                <button type="button"
+                                                        class="btn btn-outline-primary"
+                                                        id="btnNovoResponsavelOrigem"
+                                                        title="Cadastrar novo responsável">
+                                                    <i class="fas fa-user-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Telefone e Email na mesma linha -->
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="telefone_origem" class="form-label">
+                                                        Telefone
+                                                    </label>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="telefone_origem"
+                                                        name="telefone_origem"
+                                                        readonly>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="email_origem" class="form-label">
+                                                        E-mail
+                                                    </label>
+                                                    <input type="email"
+                                                        class="form-control"
+                                                        id="email_origem"
+                                                        name="email_origem"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div class="card mb-2">
-                                    <div class="card-header bg-header-blue">Cliente Destino</div>
+                                <div class="card mb-3 shadow-sm">
+                                    <div class="card-header bg-header-blue text-white">
+                                        Cliente Destino
+                                    </div>
+
                                     <div class="card-body">
+
+                                        <!-- Busca Cliente -->
                                         <div class="mb-3">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" id="busca_cliente_destino" name="busca_cliente_destino" placeholder="Buscar por apelido do cliente">
-                                                <button class="btn btn-outline-secondary" type="button" id="btn_buscar_destino">
-                                                    <i class="fas fa-search"></i> Buscar
+                                                <input type="text"
+                                                    class="form-control"
+                                                    id="busca_cliente_destino"
+                                                    name="busca_cliente_destino"
+                                                    placeholder="Buscar por apelido do cliente">
+
+                                                <button class="btn btn-outline-secondary"
+                                                        type="button"
+                                                        id="btn_buscar_destino">
+                                                    <i class="fas fa-search"></i>
                                                 </button>
-                                                <button class="btn btn-outline-primary" type="button" id="btn_recarregar_clientes_destino">
-                                                    <i class="fas fa-sync-alt"></i> Limpar
+
+                                                <button class="btn btn-outline-primary"
+                                                        type="button"
+                                                        id="btn_recarregar_clientes_destino">
+                                                    <i class="fas fa-sync-alt"></i>
                                                 </button>
                                             </div>
+                                        </div>
 
-                                            <!-- Novo Select + Botão de Cadastro -->
-                                            <div class="d-flex gap-2 mt-2 align-items-center">
-                                                <select class="form-select" id="cliente_destino" name="cliente_destino_id" required>
+                                        <!-- Select Cliente -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Cliente</label>
+                                            <div class="input-group">
+                                                <select class="form-select"
+                                                        id="cliente_destino"
+                                                        name="cliente_destino_id"
+                                                        required>
+
                                                     <option value="">Selecione o cliente de destino</option>
+
                                                     @forelse($clientes as $cliente)
-                                                        <option value="{{ $cliente->id }}" data-apelido="{{ $cliente->apelido }}">
+                                                        <option value="{{ $cliente->id }}"
+                                                                data-apelido="{{ $cliente->apelido }}">
                                                             {{ $cliente->nome }} {{ $cliente->apelido ? "({$cliente->apelido})" : '' }}
                                                         </option>
                                                     @empty
                                                         <option value="">Nenhum cliente encontrado</option>
                                                     @endforelse
+
                                                 </select>
 
-                                                <!-- Botão para abrir o modal -->
-                                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalClienteAvulso_Destino">
+                                                <button type="button"
+                                                        class="btn btn-outline-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalClienteAvulso_Destino"
+                                                        title="Cadastrar cliente avulso">
                                                     <i class="fas fa-plus"></i>
                                                 </button>
                                             </div>
                                         </div>
 
-                                        <!-- Detalhes do cliente destino -->
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="responsavel_destino" class="form-label">Responsável</label>
-                                                    <input type="text" class="form-control" id="responsavel_destino" name="responsavel_destino" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="telefone_destino" class="form-label">Telefone</label>
-                                                    <input type="text" class="form-control" id="telefone_destino" name="telefone_destino" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                        <div class="mb-3">
-                                            <label for="email_destino" class="form-label">E-mail</label>
-                                            <input type="email" class="form-control" id="email_destino" name="email_destino" readonly>
-                                        </div>
-
+                                        <!-- Endereço -->
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <div class="mb-3">
                                                     <label for="cep_destino" class="form-label">CEP</label>
-                                                    <input type="text" class="form-control" id="cep_destino" name="cep_destino" readonly>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="cep_destino"
+                                                        name="cep_destino"
+                                                        readonly>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-7">
                                                 <div class="mb-3">
-                                                    <label for="endereco_destino" class="form-label">Endereço</label>
-                                                    <input type="text" class="form-control" id="endereco_destino" name="endereco_destino" readonly>
+                                                    <label for="endereco_destino" class="form-label">
+                                                        Endereço
+                                                    </label>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="endereco_destino"
+                                                        name="endereco_destino"
+                                                        readonly>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-2">
-                                                <div class="mb-2">
+                                                <div class="mb-3">
                                                     <label for="numero_destino" class="form-label">Nº</label>
-                                                    <input type="text" class="form-control" id="numero_destino" name="numero_destino" readonly>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="numero_destino"
+                                                        name="numero_destino"
+                                                        readonly>
                                                 </div>
                                             </div>
                                         </div>
 
+                                        <!-- Cidade -->
                                         <div class="mb-3">
-                                            <label for="cidade_uf_destino" class="form-label">Cidade/UF</label>
-                                            <input type="text" class="form-control" id="cidade_uf_destino" name="cidade_uf_destino" readonly>
+                                            <label for="cidade_uf_destino" class="form-label">
+                                                Cidade/UF
+                                            </label>
+                                            <input type="text"
+                                                class="form-control"
+                                                id="cidade_uf_destino"
+                                                name="cidade_uf_destino"
+                                                readonly>
                                         </div>
+
+                                        <!-- Select Responsável -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Responsável</label>
+                                            <div class="input-group">
+                                                <select name="responsavel_destino_id"
+                                                        id="responsavel_destino_id"
+                                                        class="form-select">
+                                                    <option value="">Selecione o responsável</option>
+                                                </select>
+
+                                                <button type="button"
+                                                        class="btn btn-outline-primary"
+                                                        id="btnNovoResponsavelDestino"
+                                                        title="Cadastrar novo responsável">
+                                                    <i class="fas fa-user-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Telefone e Email na mesma linha -->
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="telefone_destino" class="form-label">
+                                                        Telefone
+                                                    </label>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="telefone_destino"
+                                                        name="telefone_destino"
+                                                        readonly>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="email_destino" class="form-label">
+                                                        E-mail
+                                                    </label>
+                                                    <input type="email"
+                                                        class="form-control"
+                                                        id="email_destino"
+                                                        name="email_destino"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -583,6 +747,53 @@
     </div>
 </div>
 
+<!-- Modal: Cadastro Responsavel -->
+<div class="modal fade" id="modalNovoResponsavel"
+                        tabindex="-1"
+                        aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Responsável</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden" id="cliente_id_modal">
+
+                <div class="mb-3">
+                    <label>Nome</label>
+                    <input type="text" id="novo_nome" name="novo_nome" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label>Telefone</label>
+                    <input
+                        type="text"
+                        class="form-control @error('novo_telefone') is-invalid @enderror"
+                        id="novo_telefone"
+                        name="novo_telefone"
+                        placeholder="(99) 99999-9999 ou (99) 9999-9999"
+                        maxlength="15"
+                        autocomplete="off">
+                </div>
+
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" id="novo_email" class="form-control">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" id="btnSalvarNovoResponsavel">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @endsection
 
@@ -622,14 +833,98 @@
         // Eventos para calculo
         $(camposComMascara.join(',')).on('blur change', calcularValorTotalServico);
 
-        $('#cliente_origem').change(function() {
+        $('#responsavel_origem_id').change(function () {
+
+            let selected = $(this).find(':selected');
+
+            $('#telefone_origem').val(selected.data('telefone') || '');
+            $('#email_origem').val(selected.data('email') || '');
+
+        });
+
+        $('#cliente_origem').change(function () {
+
             const clienteId = $(this).val();
-            clienteId ? CarregarDetalhesClientes('origem', clienteId) : limparDetalhesClientes('origem');
+            const select = $('#responsavel_origem_id');
+
+            // Se não tiver cliente selecionado
+            if (!clienteId) {
+
+                limparDetalhesClientes('origem');
+
+                select.empty()
+                    .append('<option value="">Selecione o responsável</option>');
+
+                $('#telefone_origem').val('');
+                $('#email_origem').val('');
+
+                return;
+            }
+
+            // Carrega detalhes do cliente (endereço etc)
+            CarregarDetalhesClientes('origem', clienteId);
+
+            // Limpa responsável e contatos
+            select.empty()
+                .append('<option value="">Selecione o responsável</option>');
+
+            $('#telefone_origem').val('');
+            $('#email_origem').val('');
+
+            // Carrega responsáveis
+            $.get(`/clientes/${clienteId}/responsaveis`, function (data) {
+
+                data.forEach(function (resp) {
+                    select.append(`
+                        <option value="${resp.id}"
+                            data-telefone="${resp.telefone || ''}"
+                            data-email="${resp.email || ''}">
+                            ${resp.nome}
+                        </option>
+                    `);
+                });
+
+            })
+            .fail(function (xhr) {
+                console.error(xhr.responseText);
+                alert('Erro ao carregar responsáveis. Verifique o console.');
+            });
+
         });
 
         $('#cliente_destino').change(function() {
             const clienteId = $(this).val();
-            clienteId ? CarregarDetalhesClientes('destino', clienteId) : limparDetalhesClientes('destino');
+            const select = $('#responsavel_destino_id');
+
+            if (!clienteId) {
+                limparDetalhesClientes('destino');
+                select.empty().append('<option value="">Selecione o responsável</option>');
+                $('#telefone_destino').val('');
+                $('#email_destino').val('');
+                return;
+            }
+
+            CarregarDetalhesClientes('destino', clienteId);
+
+            select.empty().append('<option value="">Selecione o responsável</option>');
+            $('#telefone_destino').val('');
+            $('#email_destino').val('');
+
+            $.get(`/clientes/${clienteId}/responsaveis`, function (data) {
+                data.forEach(function (resp) {
+                    select.append(`
+                        <option value="${resp.id}"
+                            data-telefone="${resp.telefone || ''}"
+                            data-email="${resp.email || ''}">
+                            ${resp.nome}
+                        </option>
+                    `);
+                });
+            })
+            .fail(function (xhr) {
+                console.error(xhr.responseText);
+                alert('Erro ao carregar responsáveis. Verifique o console.');
+            });
         });
 
         $('#motorista').on('change', function() {
@@ -953,7 +1248,7 @@
         $('#busca_cliente_origem').focus();
     }
 
-   function buscarClientesPorApelido(apelido, tipoCliente) {
+    function buscarClientesPorApelido(apelido, tipoCliente) {
         $.get("/clientes/busca_por_apelido", { apelido: apelido }, function(response) {
             const selectId = tipoCliente === 'origem' ? 'cliente_origem' : 'cliente_destino';
             const select = $('#' + selectId);
@@ -1258,10 +1553,148 @@
         }
     }
 
+    let tipoResponsavelAtual = null;
+
+    $(document).on('click', '#btnNovoResponsavelOrigem', function () {
+
+        const clienteId = $('#cliente_origem').val();
+
+        if (!clienteId) {
+            alert('Selecione o cliente antes de cadastrar um responsável.');
+            return;
+        }
+        tipoResponsavelAtual = 'origem';
+
+        $('#cliente_id_modal').val(clienteId);
+
+        $('#novo_nome').val('');
+        $('#novo_telefone').val('');
+        $('#novo_email').val('');
+
+        const modalElement = document.getElementById('modalNovoResponsavel');
+
+        let modal = bootstrap.Modal.getInstance(modalElement);
+
+        if (!modal) {
+            modal = new bootstrap.Modal(modalElement);
+        }
+
+        modal.show();
+    });
+
+    var behavior = function (val) {
+        return val.replace(/\D/g, '').length === 11
+            ? '(00) 00000-0000'
+                : '(00) 0000-00009';
+        };
+
+        var options = {
+            onKeyPress: function(val, e, field, options) {
+                field.mask(behavior.apply({}, arguments), options);
+            }
+    };
+
+
+    $(document).on('click', '#btnNovoResponsavelDestino', function () {
+
+        const clienteId = $('#cliente_destino').val();
+
+        if (!clienteId) {
+            alert('Selecione o cliente antes de cadastrar um responsável.');
+            return;
+        }
+        tipoResponsavelAtual = 'destino';
+
+        $('#cliente_id_modal').val(clienteId);
+
+        $('#novo_nome').val('');
+        $('#novo_telefone').val('');
+        $('#novo_email').val('');
+
+        const modalElement = document.getElementById('modalNovoResponsavel');
+
+        let modal = bootstrap.Modal.getInstance(modalElement);
+
+        if (!modal) {
+            modal = new bootstrap.Modal(modalElement);
+        }
+        modal.show();
+    });
+
+    $(document).on('click', '#btnSalvarNovoResponsavel', function () {
+        console.log('clicou salvar');
+
+        const clienteId = $('#cliente_id_modal').val();
+
+        console.log('cliente enviado para modal:', clienteId);
+
+        $.ajax({
+            url: `/clientes/${clienteId}/responsaveis`,
+            method: 'POST',
+            data: {
+                nome: $('#novo_nome').val(),
+                telefone: $('#novo_telefone').val(),
+                email: $('#novo_email').val(),
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (resp) {
+
+                const select = tipoResponsavelAtual === 'origem'
+                    ? $('#responsavel_origem_id')
+                    : $('#responsavel_destino_id');
+
+                select.append(`
+                    <option value="${resp.id}"
+                        data-telefone="${resp.telefone || ''}"
+                        data-email="${resp.email || ''}"
+                        selected>
+                        ${resp.nome}
+                    </option>
+                `);
+
+                select.trigger('change');
+
+                const modalId = 'modalNovoResponsavel';
+
+                const modal = bootstrap.Modal.getInstance(
+                    document.getElementById(modalId)
+                );
+
+                if (modal) modal.hide();
+            },
+            error: function (xhr) {
+                console.log({
+                    clienteId: clienteId,
+                    nome: $('#novo_nome').val(),
+                    telefone: $('#novo_telefone').val(),
+                    email: $('#novo_email').val()
+                });
+
+                console.error(xhr.responseText);
+                alert('Erro ao salvar responsável.');
+            }
+        });
+    });
+
+
+    $(document).on('shown.bs.modal', '#modalNovoResponsavel', function () {
+
+        var behavior = function (val) {
+            return val.replace(/\D/g, '').length === 11
+                ? '(00) 00000-0000'
+                : '(00) 0000-00009';
+        };
+
+        var options = {
+            onKeyPress: function(val, e, field, options) {
+                field.mask(behavior.apply({}, arguments), options);
+            }
+        };
+
+        $('#novo_telefone').mask(behavior, options);
+
+    });
+
  </script>
 
-
-
-
-
-
+ @endpush

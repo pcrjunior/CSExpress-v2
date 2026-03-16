@@ -251,4 +251,14 @@ class OrdemServico extends Model
         return $this->hasOne(\App\Models\ContaReceber::class, 'ordem_servico_id');
     }
 
+    public function responsavelOrigem()
+    {
+        return $this->belongsTo(ClienteResponsavel::class, 'responsavel_origem_id');
+    }
+
+    public function responsavelDestino()
+    {
+        return $this->belongsTo(ClienteResponsavel::class, 'responsavel_destino_id');
+    }
+
 }

@@ -7,7 +7,9 @@ use App\Http\Requests\ClienteRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Models\ClienteResponsavel;
 
 
 class ClienteController extends Controller
@@ -191,6 +193,37 @@ class ClienteController extends Controller
             'created' => true,
             'cliente' => $cliente
         ]);
+    }
+
+    public function responsaveis($clienteId)
+    {
+        $cliente = Cliente::with('responsaveis')->findOrFail($clienteId);
+
+        return response()->json($cliente->responsaveis);
+    }
+
+    public function storeResponsavel(Request $request, $clienteId)
+    {
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'telefone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255'
+        ]);
+
+        //Log::info('Validação passou');
+
+        $cliente = Cliente::findOrFail($clienteId);
+
+        $responsavel = $cliente->responsaveis()->create([
+            'nome' => $request->nome,
+            'telefone' => $request->telefone,
+            'email' => $request->email
+        ]);
+
+        //Log::info('Validação Create');
+
+
+        return response()->json($responsavel);
     }
 
 }

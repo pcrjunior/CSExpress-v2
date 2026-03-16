@@ -287,13 +287,34 @@ class RelatorioController extends Controller
             ->whereNull('deleted_at');
 
         // Filtros de datas
-        if ($request->filled('data_inicio')) {
+        /* if ($request->filled('data_inicio')) {
             $query->whereDate('data_servico', '>=', $request->data_inicio);
         }
 
         if ($request->filled('data_fim')) {
             $query->whereDate('data_servico', '<=', $request->data_fim);
+        } */
+
+
+        // 🔎 Filtro por DATA DO SERVIÇO (ordem_servicos.data_servico)
+        if ($request->filled('data_inicio') || $request->filled('data_fim')) {
+
+            $query->whereHas('ordemServico', function ($q) use ($request) {
+
+                if ($request->filled('data_inicio')) {
+                    $q->whereDate('data_servico', '>=', $request->data_inicio);
+                }
+
+                if ($request->filled('data_fim')) {
+                    $q->whereDate('data_servico', '<=', $request->data_fim);
+                }
+
+            });
         }
+
+
+
+
 
         // Filtro por cliente específico
         if ($request->filled('cliente_id')) {
@@ -364,39 +385,43 @@ class RelatorioController extends Controller
         ]);
     }
 
+
     private function gerarRelatorioMotoristas(Request $request): \Illuminate\Support\Collection
     {
-        // ✅ 1) Inicializa a query
         $query = ContaPagar::query()
-            ->with('entregador')
+            ->with(['entregador', 'ordemServico']) // importante carregar OS
             ->whereNotNull('entregador_id')
             ->whereHas('entregador', function ($q) {
                 $q->whereRaw("LOWER(perfil) = 'motorista'");
             });
 
-        // ✅ 2) Datas (ajuste o campo conforme sua regra: created_at / data_vencimento / data_pagamento)
-        if ($request->filled('data_inicio')) {
-            $query->whereDate('data_servico', '>=', $request->data_inicio);
+        if ($request->filled('data_inicio') || $request->filled('data_fim')) {
+
+            $query->whereHas('ordemServico', function ($q) use ($request) {
+
+                if ($request->filled('data_inicio')) {
+                    $q->whereDate('data_servico', '>=', $request->data_inicio);
+                }
+
+                if ($request->filled('data_fim')) {
+                    $q->whereDate('data_servico', '<=', $request->data_fim);
+                }
+
+            });
         }
 
-        if ($request->filled('data_fim')) {
-            $query->whereDate('data_servico', '<=', $request->data_fim);
-        }
-
-        // ✅ 3) BUG do filtro: na blade vem motorista_id
         if ($request->filled('motorista_id')) {
             $query->where('entregador_id', $request->motorista_id);
         }
 
-        // ✅ 4) Status
         if ($request->filled('status_pagamento')) {
             $query->where('status_pagamento', $request->status_pagamento);
         }
 
         $contas = $query->get();
 
-        // ✅ 5) Monta o relatório agrupado
         return $contas->groupBy('entregador_id')->map(function ($grupo) {
+
             $entregador = $grupo->first()->entregador;
 
             $total_pago = $grupo->where('status_pagamento', 'pago')->sum('valor_total');
@@ -406,7 +431,7 @@ class RelatorioController extends Controller
                 'id' => $entregador->id ?? null,
                 'nome' => $entregador->nome ?? 'N/A',
 
-                // ⚠️ importante: a blade usa total_ordens
+                // total de contas vinculadas (cada conta representa uma OS)
                 'total_ordens' => $grupo->count(),
 
                 'total_pago' => $total_pago,
@@ -414,8 +439,6 @@ class RelatorioController extends Controller
             ];
         })->values();
     }
-
-
 
     public function exportarEntregadoresPDF(Request $request)
     {
@@ -534,6 +557,8 @@ class RelatorioController extends Controller
         if ($request->filled('data_fim')) {
             $query->whereDate('data_servico', '<=', $request->data_fim);
         }
+
+        dd($query);
 
         // Filtro por cliente contratante
         if ($request->filled('cliente_id')) {
