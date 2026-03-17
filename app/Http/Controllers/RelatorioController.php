@@ -14,7 +14,7 @@ use App\Exports\MotoristasExport;
 use App\Exports\OrdemServicoExport;
 use App\Exports\EntregadoresExport;
 use App\Exports\ClientesAtendidosExport;
-
+use App\Exports\ClientesAnaliticoExport;
 
 
 
@@ -708,5 +708,165 @@ class RelatorioController extends Controller
         return Excel::download(new ClientesAtendidosExport($request), 'clientes-atendidos.xlsx');
     }
 
+    public function exportarClientesAnaliticoExcel(Request $request)
+    {
+        return Excel::download(
+            new ClientesAnaliticoExport($request),
+            'clientes-analitico.xlsx'
+        );
+    }
+
+    public function exportarClientesAnaliticoPDF(Request $request)
+    {
+        $query = OrdemServico::query()
+            ->with(['clienteOrigem', 'clienteDestino'])
+            ->whereNull('deleted_at')
+            ->where('status', '!=', 'cancelado')
+            ->whereIn('contratante_tipo', ['origem', 'destino']);
+
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('data_servico', '>=', $request->data_inicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('data_servico', '<=', $request->data_fim);
+        }
+
+        if ($request->filled('cliente_id')) {
+            $clienteId = $request->cliente_id;
+
+            $query->where(function ($q) use ($clienteId) {
+                $q->where(function ($sub) use ($clienteId) {
+                    $sub->where('contratante_tipo', 'origem')
+                        ->where('cliente_origem_id', $clienteId);
+                })->orWhere(function ($sub) use ($clienteId) {
+                    $sub->where('contratante_tipo', 'destino')
+                        ->where('cliente_destino_id', $clienteId);
+                });
+            });
+        }
+
+        $ordens = $query->orderBy('data_servico')->get();
+
+        $dados = $ordens->map(function ($os) {
+
+        $cliente = $os->contratante_tipo === 'origem'
+            ? $os->clienteOrigem
+            : $os->clienteDestino;
+
+            return [
+
+                'data' => $os->data_servico,
+
+                'cliente' => $cliente->nome ?? '',
+
+                'apelido' => $cliente->apelido ?? '',
+
+                'carro' => (float) ($os->valor_motorista ?? 0),
+
+                'ajudantes' => (float) ($os->valor_ajudantes ?? 0),
+
+            ];
+        });
+
+        $totalCarro = $dados->sum('carro');
+        $totalAjudantes = $dados->sum('ajudantes');
+        $totalGeral = $dados->sum('total');
+
+        $pdf = Pdf::loadView('pdf.clientes-analitico', [
+            'dados' => $dados,
+            'totalCarro' => $totalCarro,
+            'totalAjudantes' => $totalAjudantes,
+            'totalGeral' => $totalGeral,
+            'dataAtual' => now()->format('d/m/Y'),
+        ]);
+
+        return $pdf->download('clientes-analitico.pdf');
+    }
+
+
+    public function relatorioClientesAnalitico(Request $request)
+    {
+        $query = OrdemServico::query()
+            ->with(['clienteOrigem', 'clienteDestino'])
+            ->whereNull('deleted_at')
+            ->where('status', '!=', 'cancelado')
+            ->whereIn('contratante_tipo', ['origem', 'destino']);
+
+
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('data_servico', '>=', $request->data_inicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('data_servico', '<=', $request->data_fim);
+        }
+
+
+        if ($request->filled('cliente_id')) {
+
+            $clienteId = $request->cliente_id;
+
+            $query->where(function ($q) use ($clienteId) {
+
+                $q->where(function ($sub) use ($clienteId) {
+
+                    $sub->where('contratante_tipo', 'origem')
+                        ->where('cliente_origem_id', $clienteId);
+
+                })
+
+                ->orWhere(function ($sub) use ($clienteId) {
+
+                    $sub->where('contratante_tipo', 'destino')
+                        ->where('cliente_destino_id', $clienteId);
+
+                });
+
+            });
+        }
+
+
+        // TOTAL SEM PAGINAÇÃO
+        $totalCarro = (clone $query)->sum('valor_motorista');
+        $totalAjudantes = (clone $query)->sum('valor_ajudantes');
+        $totalGeral = $totalCarro + $totalAjudantes;
+
+
+        // PAGINAÇÃO
+        $ordens = $query
+            ->orderBy('data_servico')
+            ->orderBy('id')
+            ->paginate(15)
+            ->appends($request->query());
+
+
+        $dados = $ordens->getCollection()->map(function ($os) {
+
+            $clienteContratante = $os->contratante_tipo === 'origem'
+                ? $os->clienteOrigem
+                : $os->clienteDestino;
+
+            return [
+                'data' => $os->data_servico,
+                'cliente' => $clienteContratante->nome ?? 'N/A',
+                'apelido' => $clienteContratante->apelido ?? '',
+                'carro' => (float) $os->valor_motorista,
+                'ajudantes' => (float) $os->valor_ajudantes,
+
+            ];
+        });
+
+        $ordens->setCollection($dados);
+        $clientes = Cliente::orderBy('nome')->get();
+
+        return view('relatorios.clientes-analitico', [
+            'dados' => $ordens,
+            'clientes' => $clientes,
+            'totalCarro' => $totalCarro,
+            'totalAjudantes' => $totalAjudantes,
+            'totalGeral' => $totalGeral,
+        ]);
+    }
 
 }

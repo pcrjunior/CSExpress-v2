@@ -275,6 +275,12 @@ Route::middleware(['auth'])->group(function () {
             ->name('clientes-atendidos.exportar');
         Route::get('/clientes-atendidos/excel', [RelatorioController::class, 'exportarClientesAtendidosExcel'])
             ->name('clientes-atendidos.excel');
+        Route::get('/clientes-analitico', [RelatorioController::class, 'relatorioClientesAnalitico'])
+            ->name('clientes-analitico');
+        Route::get('/clientes-analitico/exportar', [RelatorioController::class, 'exportarClientesAnaliticoPDF'])
+            ->name('clientes-analitico.exportar');
+        Route::get('/clientes-analitico/excel', [RelatorioController::class, 'exportarClientesAnaliticoExcel'])
+            ->name('clientes-analitico.excel');
     });
 
     // ========================================================================
