@@ -1,30 +1,36 @@
 function CarregarDetalhesClientes(tipo, clienteId) {
-    if (!clienteId) {
-        limparDetalhesClientes(tipo);
-        return;
-    }
-    // Utiliza a variável global definida na view
-    let url = urlClientesDados.replace('CLIENTE_ID_PLACEHOLDER', clienteId);
-
-    $.ajax({
-        url: url,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            if (data && data.cliente) {
-                //$('#responsavel_' + tipo).val(data.cliente.responsavel);
-                //$('#telefone_' + tipo).val(data.cliente.telefone);
-                //$('#email_' + tipo).val(data.cliente.email);
-                $('#cep_' + tipo).val(data.cliente.cep);
-                $('#endereco_' + tipo).val(data.cliente.endereco);
-                $('#cidade_uf_' + tipo).val(data.cliente.cidade_uf);
-                $('#numero_' + tipo).val(data.cliente.numero);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error("Erro ao carregar os dados do cliente:", error);
-            alert("Não foi possível carregar os dados do cliente.");
+    return new Promise((resolve, reject) => {
+        if (!clienteId) {
+            limparDetalhesClientes(tipo);
+            resolve();
+            return;
         }
+        // Utiliza a variável global definida na view
+        let url = urlClientesDados.replace('CLIENTE_ID_PLACEHOLDER', clienteId);
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data && data.cliente) {
+                    //$('#responsavel_' + tipo).val(data.cliente.responsavel);
+                    //$('#telefone_' + tipo).val(data.cliente.telefone);
+                    //$('#email_' + tipo).val(data.cliente.email);
+                    $('#cep_' + tipo).val(data.cliente.cep);
+                    $('#endereco_' + tipo).val(data.cliente.endereco);
+                    $('#numero_' + tipo).val(data.cliente.numero);
+                    $('#complemento_' + tipo).val(data.cliente.complemento);
+                    $('#cidade_uf_' + tipo).val(data.cliente.cidade_uf);
+                }
+                resolve();
+            },
+            error: function(xhr, status, error) {
+                console.error("Erro ao carregar os dados do cliente:", error);
+                alert("Não foi possível carregar os dados do cliente.");
+                reject(error);
+            }
+        });
     });
 }
 

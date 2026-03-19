@@ -70,10 +70,10 @@
                     <p class="small mb-1"><strong>E-mail:</strong> {{ $ordemServico->clienteOrigem->email ?? 'N/A' }}</p>
                     <div class="row">
                         <div class="col-md-6">
-                            <p class="small mb-1"><strong>Responsável:</strong> {{ $ordemServico->clienteOrigem->responsavel ?? 'N/A' }}</p>
+                            <p class="small mb-1"><strong>Responsável:</strong> {{ $ordemServico->responsavelOrigem->nome ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-6">
-                            <p class="small mb-1"><strong>Telefone:</strong> {{ $ordemServico->clienteOrigem->telefone ?? 'N/A' }}</p>
+                            <p class="small mb-1"><strong>Telefone:</strong> {{ $ordemServico->responsavelOrigem->telefone ?? $ordemServico->clienteOrigem->telefone ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-6">
                             <p class="small mb-1"><strong>Endereço:</strong> {{ $ordemServico->clienteOrigem->endereco ?? 'N/A' }}</p>
@@ -103,10 +103,10 @@
                     <p class="small mb-1"><strong>E-mail:</strong> {{ $ordemServico->clienteDestino->email ?? 'N/A' }}</p>
                     <div class="row">
                         <div class="col-md-6">
-                            <p class="small mb-1"><strong>Responsável:</strong> {{ $ordemServico->clienteDestino->responsavel ?? 'N/A' }}</p>
+                            <p class="small mb-1"><strong>Responsável:</strong> {{ $ordemServico->responsavelDestino->nome ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-6">
-                            <p class="small mb-1"><strong>Telefone:</strong> {{ $ordemServico->clienteDestino->telefone ?? 'N/A' }}</p>
+                            <p class="small mb-1"><strong>Telefone:</strong> {{ $ordemServico->responsavelDestino->telefone ?? $ordemServico->clienteDestino->telefone ?? 'N/A' }}</p>
                         </div>
                     </div>
                     <div class="row">

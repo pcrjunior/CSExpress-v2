@@ -28,14 +28,7 @@ class ClienteRequest extends FormRequest
             'bairro' => 'nullable|max:100',
             'cidade' => 'required|max:50',
             'uf' => 'required|size:2',
-            'responsavel' => 'nullable|max:100',
-            'telefone' => 'required|celular_com_ddd',
-            'email' => 'required|email|max:100',
-            'responsavel2' => 'nullable|max:100',
-            'telefone2' => 'nullable|celular_com_ddd',
-            'email2' => 'nullable|email|max:100',
-
-            // Removemos o `unique` do documento. Validação agora é manual.
+            'responsaveis_data' => 'nullable|json',
             'documento' => 'required|' . ($this->input('tipo') == 'PF' ? 'cpf' : 'cnpj'),
         ];
     }
@@ -48,6 +41,26 @@ class ClienteRequest extends FormRequest
             $apelido = $this->input('apelido') ?? '';
             $apelidoNormalizado = Str::slug($apelido, '');
             $clienteId = $this->route('cliente')?->id;
+
+            // Validar responsáveis
+            $responsaveisData = $this->input('responsaveis_data');
+            if ($responsaveisData) {
+                $responsaveis = json_decode($responsaveisData, true);
+                $temResponsavelValido = false;
+                
+                if (is_array($responsaveis)) {
+                    foreach ($responsaveis as $resp) {
+                        if (!empty($resp['nome']) || !empty($resp['email'])) {
+                            $temResponsavelValido = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!$temResponsavelValido) {
+                    $validator->errors()->add('responsaveis_data', 'É necessário informar pelo menos um responsável com nome ou e-mail.');
+                }
+            }
 
             if ($tipo === 'PF') {
                 // Validação CPF único
@@ -91,12 +104,7 @@ class ClienteRequest extends FormRequest
             'bairro' => 'bairro',
             'cidade' => 'cidade',
             'uf' => 'UF',
-            'responsavel' => 'responsável',
-            'telefone' => 'telefone',
-            'email' => 'e-mail',
-            'responsavel2' => 'responsável2',
-            'telefone2' => 'telefone2',
-            'email2' => 'e-mail2',
+            'responsaveis_data' => 'responsáveis',
         ];
     }
 }

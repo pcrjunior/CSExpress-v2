@@ -53,11 +53,33 @@ class ClienteController extends Controller
 
 
     public function store(ClienteRequest $request)
-
     {
-        $dados = $request->validated();
-        Cliente::create($dados);
-        return redirect()->route('clientes.index')->with('success', 'Cliente cadastrado com sucesso.');
+        DB::beginTransaction();
+        try {
+            $dados = $request->validated();
+            $cliente = Cliente::create($dados);
+
+            // Processar responsáveis se fornecidos
+            if ($request->filled('responsaveis_data')) {
+                $responsaveisData = json_decode($request->responsaveis_data, true);
+                foreach ($responsaveisData as $responsavel) {
+                    if (!empty($responsavel['nome']) || !empty($responsavel['email'])) {
+                        $cliente->responsaveis()->create([
+                            'nome' => $responsavel['nome'] ?? '',
+                            'telefone' => $responsavel['telefone'] ?? '',
+                            'email' => $responsavel['email'] ?? ''
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('clientes.index')->with('success', 'Cliente cadastrado com sucesso.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erro ao cadastrar cliente: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Erro ao cadastrar cliente: ' . $e->getMessage());
+        }
     }
 
     public function show(Cliente $cliente)
@@ -72,9 +94,55 @@ class ClienteController extends Controller
 
     public function update(ClienteRequest $request, Cliente $cliente)
     {
-        $dados = $request->validated();
-        $cliente->update($dados);
-        return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso.');
+        DB::beginTransaction();
+        try {
+            $dados = $request->validated();
+            $cliente->update($dados);
+
+            // Processar responsáveis se fornecidos
+            if ($request->filled('responsaveis_data')) {
+                $responsaveisData = json_decode($request->responsaveis_data, true);
+                
+                // Deletar responsáveis antigos que não estão nos dados novos
+                $idsNovos = collect($responsaveisData)
+                    ->filter(fn($r) => !empty($r['id']) && $r['id'] !== 'new')
+                    ->pluck('id')
+                    ->toArray();
+                
+                $cliente->responsaveis()
+                    ->whereNotIn('id', $idsNovos)
+                    ->where('id', '!=', null)
+                    ->delete();
+
+                // Criar ou atualizar responsáveis
+                foreach ($responsaveisData as $responsavel) {
+                    if (!empty($responsavel['nome']) || !empty($responsavel['email'])) {
+                        if ($responsavel['id'] === 'new') {
+                            // Novo responsável
+                            $cliente->responsaveis()->create([
+                                'nome' => $responsavel['nome'] ?? '',
+                                'telefone' => $responsavel['telefone'] ?? '',
+                                'email' => $responsavel['email'] ?? ''
+                            ]);
+                        } else {
+                            // Atualizar existente
+                            ClienteResponsavel::find($responsavel['id'])?->update([
+                                'nome' => $responsavel['nome'] ?? '',
+                                'telefone' => $responsavel['telefone'] ?? '',
+                                'email' => $responsavel['email'] ?? ''
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erro ao atualizar cliente: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Erro ao atualizar cliente: ' . $e->getMessage());
+        }
     }
 
     public function destroy(Cliente $cliente)
@@ -98,18 +166,14 @@ class ClienteController extends Controller
         return response()->json([
             'cliente' => [
                 'id' => $cliente->id,
-                'responsavel' => $cliente->responsavel,
-                'telefone' => $cliente->telefone,
-                'email' => $cliente->email,
                 'cep' => $cliente->cep,
                 'endereco' => $cliente->endereco,
+                'numero' => $cliente->numero,
+                'complemento' => $cliente->complemento,
                 'bairro' => $cliente->bairro,
                 'cidade' => $cliente->cidade,
                 'uf' => $cliente->uf,
                 'cidade_uf' => $cliente->cidade . '/' . $cliente->uf,
-                'responsavel2' => $cliente->responsavel2,
-                'telefone2' => $cliente->telefone2,
-                'email2' => $cliente->email2,
             ]
         ]);
 
@@ -127,7 +191,7 @@ class ClienteController extends Controller
         // Buscar por apelido ou nome que contenha a string fornecida
         $clientes = Cliente::where('apelido', 'LIKE', "%{$apelido}%")
                             ->orWhere('nome', 'LIKE', "%{$apelido}%")
-                            ->select('id', 'nome', 'apelido', 'telefone', 'email')
+                            ->select('id', 'nome', 'apelido')
                             ->limit(10)
                             ->get();
 

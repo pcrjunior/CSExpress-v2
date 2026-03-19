@@ -24,6 +24,8 @@ class OrdemServico extends Model
         'empresa_id',
         'cliente_origem_id',
         'cliente_destino_id',
+        'responsavel_origem_id',
+        'responsavel_destino_id',
         'contratante_tipo',
         'motorista_id',
         'veiculo_id',
@@ -93,6 +95,45 @@ class OrdemServico extends Model
                     'status_anterior' => $model->getOriginal('status'),
                     'status_novo' => $model->status,
                     'observacao' => 'Status atualizado',
+                ]);
+            }
+
+            // Verifica mudanças nos responsáveis
+            if ($model->isDirty('responsavel_origem_id')) {
+                $responsavelAnterior = $model->getOriginal('responsavel_origem_id');
+                $responsavelNovo = $model->responsavel_origem_id;
+                
+                $nomeAnterior = $responsavelAnterior 
+                    ? ClienteResponsavel::find($responsavelAnterior)?->nome 
+                    : 'Nenhum';
+                $nomeNovo = $responsavelNovo 
+                    ? ClienteResponsavel::find($responsavelNovo)?->nome 
+                    : 'Nenhum';
+                
+                $model->historicos()->create([
+                    'user_id' => auth()->id() ?? $model->user_id,
+                    'status_anterior' => null,
+                    'status_novo' => $model->status,
+                    'observacao' => "Responsável Origem alterado de '{$nomeAnterior}' para '{$nomeNovo}'",
+                ]);
+            }
+
+            if ($model->isDirty('responsavel_destino_id')) {
+                $responsavelAnterior = $model->getOriginal('responsavel_destino_id');
+                $responsavelNovo = $model->responsavel_destino_id;
+                
+                $nomeAnterior = $responsavelAnterior 
+                    ? ClienteResponsavel::find($responsavelAnterior)?->nome 
+                    : 'Nenhum';
+                $nomeNovo = $responsavelNovo 
+                    ? ClienteResponsavel::find($responsavelNovo)?->nome 
+                    : 'Nenhum';
+                
+                $model->historicos()->create([
+                    'user_id' => auth()->id() ?? $model->user_id,
+                    'status_anterior' => null,
+                    'status_novo' => $model->status,
+                    'observacao' => "Responsável Destino alterado de '{$nomeAnterior}' para '{$nomeNovo}'",
                 ]);
             }
         });

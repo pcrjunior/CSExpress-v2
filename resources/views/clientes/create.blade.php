@@ -83,37 +83,31 @@
                             <div class="card-body">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="documento" id="labelDocumento" class="form-label">CPF / CNPJ</label>
-                                            <input type="text" class="form-control @error('documento') is-invalid @enderror" id="documento" name="documento"
-                                                value="{{ old('documento', isset($cliente) ? $cliente->documento : '') }}" required>
-                                            @error('documento')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                        <label for="documento" id="labelDocumento" class="form-label">CPF / CNPJ</label>
+                                        <input type="text" class="form-control @error('documento') is-invalid @enderror" id="documento" name="documento"
+                                            value="{{ old('documento', isset($cliente) ? $cliente->documento : '') }}" required>
+                                        @error('documento')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="nome" id="labelNome" class="form-label">Nome / Razão Social</label>
-                                            <input type="text" class="form-control @error('nome') is-invalid @enderror" id="nome" name="nome"
-                                                value="{{ old('nome', isset($cliente) ? $cliente->nome : '') }}" required>
-                                            @error('nome')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                        <label for="nome" id="labelNome" class="form-label">Nome / Razão Social</label>
+                                        <input type="text" class="form-control @error('nome') is-invalid @enderror" id="nome" name="nome"
+                                            value="{{ old('nome', isset($cliente) ? $cliente->nome : '') }}" required>
+                                        @error('nome')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="apelido" class="form-label">Apelido / Nome Fantasia</label>
-                                            <input type="text" class="form-control @error('apelido') is-invalid @enderror" id="apelido" name="apelido"
-                                                value="{{ old('apelido', isset($cliente) ? $cliente->apelido : '') }}">
-                                            @error('apelido')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                        <label for="apelido" class="form-label">Apelido / Nome Fantasia</label>
+                                        <input type="text" class="form-control @error('apelido') is-invalid @enderror" id="apelido" name="apelido"
+                                            value="{{ old('apelido', isset($cliente) ? $cliente->apelido : '') }}">
+                                        @error('apelido')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -127,49 +121,14 @@
                             <div class="card-body">
                                 <div class="row mb-3">
                                     <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="cep" class="form-label">CEP</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control @error('cep') is-invalid @enderror" id="cep" name="cep"
-                                                    value="{{ old('cep', isset($cliente) ? $cliente->cep : '') }}" required>
-                                                <button class="btn btn-outline-secondary" type="button" id="buscarCep">
-                                                    <i class="fas fa-search"></i>
-                                                </button>
-                                                @error('cep')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-group ">
-                                            <label for="endereco" class="form-label">Endereço</label>
-                                            <input type="text" class="form-control @error('endereco') is-invalid @enderror" id="endereco" name="endereco"
-                                                value="{{ old('endereco', isset($cliente) ? $cliente->endereco : '') }}" required>
-                                            @error('endereco')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="numero" class="form-label">Número</label>
-                                            <input type="text" class="form-control @error('numero') is-invalid @enderror" id="numero" name="numero"
-                                                value="{{ old('numero', isset($cliente) ? $cliente->numero : '') }}" required>
-                                            @error('numero')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="complemento" class="form-label">Complemento</label>
-                                            <input type="text" class="form-control @error('complemento') is-invalid @enderror" id="complemento" name="complemento"
-                                                value="{{ old('complemento', isset($cliente) ? $cliente->complemento : '') }}">
-                                            @error('complemento')
+                                        <label for="cep" class="form-label">CEP</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control @error('cep') is-invalid @enderror" id="cep" name="cep"
+                                                value="{{ old('cep', isset($cliente) ? $cliente->cep : '') }}" required>
+                                            <button class="btn btn-outline-secondary" type="button" id="buscarCep">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                            @error('cep')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -178,40 +137,61 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="bairro" class="form-label">Bairro</label>
-                                            <input type="text" class="form-control @error('bairro') is-invalid @enderror" id="bairro" name="bairro"
-                                                value="{{ old('bairro', isset($cliente) ? $cliente->bairro : '') }}"
-                                            @error('bairro')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="cidade" class="form-label">Cidade</label>
-                                            <input type="text" class="form-control @error('cidade') is-invalid @enderror" id="cidade" name="cidade"
-                                                value="{{ old('cidade', isset($cliente) ? $cliente->cidade : '') }}" required>
-                                            @error('cidade')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                        <label for="endereco" class="form-label">Endereço</label>
+                                        <input type="text" class="form-control @error('endereco') is-invalid @enderror" id="endereco" name="endereco"
+                                            value="{{ old('endereco', isset($cliente) ? $cliente->endereco : '') }}" required>
+                                        @error('endereco')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="uf" class="form-label">UF</label>
-                                            <select class="form-select @error('uf') is-invalid @enderror" id="uf" name="uf" required>
-                                                <option value="">Selecione</option>
-                                                @foreach(['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'] as $estado)
-                                                    <option value="{{ $estado }}" {{ old('uf', isset($cliente) ? $cliente->uf : '') == $estado ? 'selected' : '' }}>
-                                                        {{ $estado }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('uf')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                        <label for="numero" class="form-label">Número</label>
+                                        <input type="text" class="form-control @error('numero') is-invalid @enderror" id="numero" name="numero"
+                                            value="{{ old('numero', isset($cliente) ? $cliente->numero : '') }}" required>
+                                        @error('numero')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="complemento" class="form-label">Complemento</label>
+                                        <input type="text" class="form-control @error('complemento') is-invalid @enderror" id="complemento" name="complemento"
+                                            value="{{ old('complemento', isset($cliente) ? $cliente->complemento : '') }}">
+                                        @error('complemento')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="bairro" class="form-label">Bairro</label>
+                                        <input type="text" class="form-control @error('bairro') is-invalid @enderror" id="bairro" name="bairro"
+                                            value="{{ old('bairro', isset($cliente) ? $cliente->bairro : '') }}" required>
+                                        @error('bairro')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="cidade" class="form-label">Cidade</label>
+                                        <input type="text" class="form-control @error('cidade') is-invalid @enderror" id="cidade" name="cidade"
+                                            value="{{ old('cidade', isset($cliente) ? $cliente->cidade : '') }}" required>
+                                        @error('cidade')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="uf" class="form-label">UF</label>
+                                        <select class="form-select @error('uf') is-invalid @enderror" id="uf" name="uf" required>
+                                            <option value="">Selecione</option>
+                                            @foreach(['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'] as $estado)
+                                                <option value="{{ $estado }}" {{ old('uf', isset($cliente) ? $cliente->uf : '') == $estado ? 'selected' : '' }}>
+                                                    {{ $estado }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('uf')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -219,120 +199,70 @@
 
                         <!-- Contato -->
                         <div class="card mb-4">
-                            <div class="card-header bg-header-blue">
+                            <div class="card-header bg-header-blue d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0">
-                                    <i class="fas fa-address-book me-2"></i>Contato
+                                    <i class="fas fa-address-book me-2"></i>Responsáveis
                                 </h6>
+                                <button type="button" class="btn btn-sm btn-success ms-auto" id="btnAdicionarResponsavel">
+                                    <i class="fas fa-plus me-1"></i>Adicionar Responsável
+                                </button>
                             </div>
                             <div class="card-body">
-                                <div class="row mb-3">
-                                    <!-- Responsável -->
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="responsavel" class="form-label">Responsável</label>
-                                            <input
-                                                type="text"
-                                                class="form-control @error('responsavel') is-invalid @enderror"
-                                                id="responsavel"
-                                                name="responsavel"
-                                                value="{{ old('responsavel', $cliente->responsavel ?? '') }}"
-                                            >
-                                            @error('responsavel')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                <div id="responsaveisContainer">
+                                    @if(isset($cliente) && $cliente->responsaveis->count() > 0)
+                                        @foreach($cliente->responsaveis as $index => $responsavel)
+                                            <div class="responsavel-item mb-3 p-3 border rounded" data-responsavel-id="{{ $responsavel->id }}">
+                                                <div class="row mb-2">
+                                                    <div class="col-auto">
+                                                        <span class="badge bg-primary">Responsável {{ $index + 1 }}</span>
+                                                    </div>
+                                                    @if(!$loop->first)
+                                                        <div class="col-auto ms-auto">
+                                                            <button type="button" class="btn btn-sm btn-danger btn-remover-responsavel">
+                                                                <i class="fas fa-trash me-1"></i>Remover
+                                                            </button>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Nome</label>
+                                                        <input type="text" class="form-control responsavel-nome" value="{{ $responsavel->nome }}" placeholder="Nome do responsável">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Telefone</label>
+                                                        <input type="text" class="form-control responsavel-telefone" value="{{ $responsavel->telefone }}" placeholder="(99) 99999-9999">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">E-mail</label>
+                                                        <input type="email" class="form-control responsavel-email" value="{{ $responsavel->email }}" placeholder="email@example.com">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="responsavel-item mb-3 p-3 border rounded" data-responsavel-id="new">
+                                            <div class="row mb-2">
+                                                <div class="col-auto">
+                                                    <span class="badge bg-primary">Responsável 1</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Nome</label>
+                                                    <input type="text" class="form-control responsavel-nome" value="{{ old('responsavel', $cliente->responsavel ?? '') }}" placeholder="Nome do responsável" {{ !isset($cliente) ? 'required' : '' }}>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Telefone</label>
+                                                    <input type="text" class="form-control responsavel-telefone" value="{{ old('telefone', $cliente->telefone ?? '') }}" placeholder="(99) 99999-9999">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">E-mail</label>
+                                                    <input type="email" class="form-control responsavel-email" value="{{ old('email', $cliente->email ?? '') }}" placeholder="email@example.com" {{ !isset($cliente) ? 'required' : '' }}>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <!-- Telefone -->
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="telefone" class="form-label">Telefone</label>
-                                            <input
-                                                type="text"
-                                                class="form-control @error('telefone') is-invalid @enderror"
-                                                id="telefone"
-                                                name="telefone"
-                                                placeholder="(99) 99999-9999 ou (99) 9999-9999"
-                                                value="{{ old('telefone', $cliente->telefone ?? '') }}"
-                                            >
-                                            @error('telefone')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <!-- E-mail -->
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="email" class="form-label">E-mail</label>
-                                            <input
-                                                type="email"
-                                                class="form-control @error('email') is-invalid @enderror"
-                                                id="email"
-                                                name="email"
-                                                value="{{ old('email', $cliente->email ?? '') }}"
-                                                required
-                                            >
-                                            @error('email')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <!-- Responsável -->
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="responsavel2" class="form-label">Responsável 2</label>
-                                            <input
-                                                type="text"
-                                                class="form-control @error('responsavel2') is-invalid @enderror"
-                                                id="responsavel2"
-                                                name="responsavel2"
-                                                value="{{ old('responsavel2', $cliente->responsavel2 ?? '') }}"
-                                            >
-                                            @error('responsavel2')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <!-- Telefone -->
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="telefone2" class="form-label">Telefone 2</label>
-                                            <input
-                                                type="text"
-                                                class="form-control @error('telefone2') is-invalid @enderror"
-                                                id="telefone2"
-                                                name="telefone2"
-                                                placeholder="(99) 99999-9999 ou (99) 9999-9999"
-                                                value="{{ old('telefone2', $cliente->telefone2 ?? '') }}"
-                                            >
-                                            @error('telefone2')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <!-- E-mail -->
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="email2" class="form-label">E-mail 2</label>
-                                            <input
-                                                type="email"
-                                                class="form-control @error('email2') is-invalid @enderror"
-                                                id="email2"
-                                                name="email2"
-                                                value="{{ old('email2', $cliente->email2 ?? '') }}"
-                                            >
-                                            @error('email')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -386,30 +316,6 @@ $(document).ready(function () {
     // Máscara de CEP
     $('#cep').mask('00000-000');
 
-    // Máscara dinâmica de telefone (fixo ou celular)
-    $('#telefone').mask('(00) 00000-0000');
-
-    $('#telefone').blur(function () {
-        var phone = $(this).val().replace(/\D/g, '');
-        if (phone.length > 10) {
-            $(this).mask('(00) 00000-0000'); // celular
-        } else {
-            $(this).mask('(00) 0000-00009'); // fixo com fallback de celular
-        }
-    });
-
-        // Máscara dinâmica de telefone (fixo ou celular)
-    $('#telefone2').mask('(00) 00000-0000');
-
-    $('#telefone2').blur(function () {
-        var phone = $(this).val().replace(/\D/g, '');
-        if (phone.length > 10) {
-            $(this).mask('(00) 00000-0000'); // celular
-        } else {
-            $(this).mask('(00) 0000-00009'); // fixo com fallback de celular
-        }
-    });
-
     // Buscar CEP via ViaCEP
     function buscarCep() {
         var cep = $('#cep').val().replace(/\D/g, '');
@@ -452,6 +358,96 @@ $(document).ready(function () {
         if ($(this).val().replace(/\D/g, '').length === 8) {
             buscarCep();
         }
+    });
+
+    // Gerenciar responsáveis dinâmicos
+    $('#btnAdicionarResponsavel').on('click', function() {
+        const container = $('#responsaveisContainer');
+        const index = container.find('.responsavel-item').length + 1;
+        
+        const novoResponsavel = `
+            <div class="responsavel-item mb-3 p-3 border rounded" data-responsavel-id="new">
+                <div class="row mb-2">
+                    <div class="col-auto">
+                        <span class="badge bg-primary">Responsável ${index}</span>
+                    </div>
+                    <div class="col-auto ms-auto">
+                        <button type="button" class="btn btn-sm btn-danger btn-remover-responsavel">
+                            <i class="fas fa-trash me-1"></i>Remover
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Nome</label>
+                        <input type="text" class="form-control responsavel-nome" placeholder="Nome do responsável">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Telefone</label>
+                        <input type="text" class="form-control responsavel-telefone" placeholder="(99) 99999-9999">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" class="form-control responsavel-email" placeholder="email@example.com">
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        container.append(novoResponsavel);
+        aplicarMascaraTelefone();
+    });
+
+    // Remover responsável
+    $(document).on('click', '.btn-remover-responsavel', function() {
+        $(this).closest('.responsavel-item').remove();
+    });
+
+    // Aplicar máscara de telefone em responsáveis
+    function aplicarMascaraTelefone() {
+        $('.responsavel-telefone').mask('(00) 00000-0000');
+        $('.responsavel-telefone').off('blur').on('blur', function() {
+            var phone = $(this).val().replace(/\D/g, '');
+            if (phone.length > 10) {
+                $(this).mask('(00) 00000-0000');
+            } else {
+                $(this).mask('(00) 0000-00009');
+            }
+        });
+    }
+
+    // Aplicar máscara inicial aos responsáveis existentes
+    aplicarMascaraTelefone();
+
+    // Interceptar submissão do formulário
+    $('form').on('submit', function(e) {
+        const responsaveis = [];
+        
+        $('#responsaveisContainer .responsavel-item').each(function() {
+            const nome = $(this).find('.responsavel-nome').val();
+            const telefone = $(this).find('.responsavel-telefone').val();
+            const email = $(this).find('.responsavel-email').val();
+            const id = $(this).data('responsavel-id');
+            
+            if (nome || email) {
+                responsaveis.push({
+                    id: id,
+                    nome: nome,
+                    telefone: telefone,
+                    email: email
+                });
+            }
+        });
+
+        // Remover campo anterior se existir
+        $(this).find('input[name="responsaveis_data"]').remove();
+
+        // Armazenar dados em campo oculto
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'responsaveis_data',
+            value: JSON.stringify(responsaveis)
+        }).appendTo(this);
     });
 });
 </script>

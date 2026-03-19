@@ -24,12 +24,6 @@ class Cliente extends Model
         'bairro',
         'cidade',
         'uf',
-        'responsavel',
-        'telefone',
-        'email',
-        'responsavel2',
-        'telefone2',
-        'email2',
         'avulso'
     ];
 

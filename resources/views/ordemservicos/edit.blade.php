@@ -828,6 +828,53 @@
     </div>
 </div>
 
+<!-- Modal: Cadastro Responsavel -->
+<div class="modal fade" id="modalNovoResponsavel"
+                        tabindex="-1"
+                        aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Responsável</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden" id="cliente_id_modal">
+
+                <div class="mb-3">
+                    <label>Nome</label>
+                    <input type="text" id="novo_nome" name="novo_nome" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label>Telefone</label>
+                    <input
+                        type="text"
+                        class="form-control @error('novo_telefone') is-invalid @enderror"
+                        id="novo_telefone"
+                        name="novo_telefone"
+                        placeholder="(99) 99999-9999 ou (99) 9999-9999"
+                        maxlength="15"
+                        autocomplete="off">
+                </div>
+
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" id="novo_email" class="form-control">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" id="btnSalvarNovoResponsavel">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 @endsection
@@ -1058,15 +1105,15 @@
     });
 
     // Função para carregar dados iniciais
-    function carregarDadosIniciais() {
-        // Carregar detalhes dos clientes
+    async function carregarDadosIniciais() {
+        // Carregar detalhes dos clientes (aguarda promises)
         if ($('#cliente_origem').val()) {
-            CarregarDetalhesClientes('origem', $('#cliente_origem').val());
+            await CarregarDetalhesClientes('origem', $('#cliente_origem').val());
             carregarResponsaveis('origem', $('#cliente_origem').val(), {{ $ordemServico->responsavel_origem_id ?? 'null' }});
         }
 
         if ($('#cliente_destino').val()) {
-            CarregarDetalhesClientes('destino', $('#cliente_destino').val());
+            await CarregarDetalhesClientes('destino', $('#cliente_destino').val());
             carregarResponsaveis('destino', $('#cliente_destino').val(), {{ $ordemServico->responsavel_destino_id ?? 'null' }});
         }
 
@@ -1229,6 +1276,8 @@
         formData.append('empresa_id', $('#empresa').val() || '');
         formData.append('cliente_origem_id', $('#cliente_origem').val() || '');
         formData.append('cliente_destino_id', $('#cliente_destino').val() || '');
+        formData.append('responsavel_origem_id', $('#responsavel_origem_id').val() || '');
+        formData.append('responsavel_destino_id', $('#responsavel_destino_id').val() || '');
         formData.append('motorista_id', $('#motorista').val() || '');
         formData.append('veiculo_id', $('#veiculos').val() || '');
         formData.append('data_servico', $('#data_servico').val() || '');

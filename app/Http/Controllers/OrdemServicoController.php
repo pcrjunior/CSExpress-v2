@@ -236,6 +236,8 @@ class OrdemServicoController extends Controller
             'empresa_id'                            => 'required',
             'cliente_origem_id'                     => 'required',
             'cliente_destino_id'                    => 'required',
+            'responsavel_origem_id'                 => 'nullable|exists:cliente_responsaveis,id',
+            'responsavel_destino_id'                => 'nullable|exists:cliente_responsaveis,id',
             'motorista_id'                          => [
                 'required',
                 'exists:entregadores,id',
@@ -441,6 +443,8 @@ class OrdemServicoController extends Controller
             'empresa_id'                  => 'required|exists:empresas,id',
             'cliente_origem_id'           => 'required|exists:clientes,id',
             'cliente_destino_id'          => 'required|exists:clientes,id',
+            'responsavel_origem_id'       => 'nullable|exists:cliente_responsaveis,id',
+            'responsavel_destino_id'      => 'nullable|exists:cliente_responsaveis,id',
             'motorista_id'                => [
                 'required',
                 'exists:entregadores,id',

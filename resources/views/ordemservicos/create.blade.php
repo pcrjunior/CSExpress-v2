@@ -1166,6 +1166,8 @@
             empresa_id: $('#empresa').val(),
             cliente_origem_id: $('#cliente_origem').val(),
             cliente_destino_id: $('#cliente_destino').val(),
+            responsavel_origem_id: $('#responsavel_origem_id').val(),
+            responsavel_destino_id: $('#responsavel_destino_id').val(),
             motorista_id: $('#motorista').val(),
             veiculo_id: $('#veiculos').val(),
             ajudantes: ajudantes,

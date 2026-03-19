@@ -142,7 +142,7 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="bairro" class="form-label">Bairro</label>
                                         <input type="text" class="form-control" id="bairro" name="bairro"
                                             value="{{ old('bairro', $cliente->bairro) }}" required>
@@ -152,7 +152,7 @@
                                         <input type="text" class="form-control" id="cidade" name="cidade"
                                             value="{{ old('cidade', $cliente->cidade) }}" required>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <label for="uf" class="form-label">UF</label>
                                         <select class="form-select" id="uf" name="uf" required>
                                             <option value="">Selecione</option>
@@ -169,27 +169,82 @@
 
                         <!-- Contato -->
                         <div class="card mb-4">
-                            <div class="card-header bg-header-blue">
-                                <h6 class="mb-0"><i class="fas fa-address-book me-2"></i>Contato</h6>
+                            <div class="card-header bg-header-blue d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-address-book me-2"></i>Responsáveis
+                                </h6>
+                                <button type="button" class="btn btn-sm btn-success ms-auto" id="btnAdicionarResponsavel">
+                                    <i class="fas fa-plus me-1"></i>Adicionar Responsável
+                                </button>
                             </div>
                             <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label for="responsavel" class="form-label">Responsável</label>
-                                        <input type="text" class="form-control" id="responsavel" name="responsavel"
-                                            value="{{ old('responsavel', $cliente->responsavel) }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="telefone" class="form-label">Telefone</label>
-                                        <input type="text" class="form-control" id="telefone" name="telefone"
-                                            placeholder="(99) 99999-9999 ou (99) 9999-9999"
-                                            value="{{ old('telefone', $cliente->telefone) }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="email" class="form-label">E-mail</label>
-                                        <input type="email" class="form-control" id="email" name="email"
-                                            value="{{ old('email', $cliente->email) }}" required>
-                                    </div>
+                                <div id="responsaveisContainer">
+                                    @if($cliente->responsaveis->count() > 0)
+                                        @foreach($cliente->responsaveis as $index => $responsavel)
+                                            <div class="responsavel-item mb-3 p-3 border rounded" data-responsavel-id="{{ $responsavel->id }}">
+                                                <div class="row mb-2">
+                                                    <div class="col-auto">
+                                                        <span class="badge bg-primary">Responsável {{ $index + 1 }}</span>
+                                                    </div>
+                                                    @if(!$loop->first)
+                                                        <div class="col-auto ms-auto">
+                                                            <button type="button" class="btn btn-sm btn-danger btn-remover-responsavel">
+                                                                <i class="fas fa-trash me-1"></i>Remover
+                                                            </button>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="form-label">Nome</label>
+                                                            <input type="text" class="form-control responsavel-nome" value="{{ $responsavel->nome }}" placeholder="Nome do responsável">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="form-label">Telefone</label>
+                                                            <input type="text" class="form-control responsavel-telefone" value="{{ $responsavel->telefone }}" placeholder="(99) 99999-9999">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="form-label">E-mail</label>
+                                                            <input type="email" class="form-control responsavel-email" value="{{ $responsavel->email }}" placeholder="email@example.com">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="responsavel-item mb-3 p-3 border rounded" data-responsavel-id="new">
+                                            <div class="row mb-2">
+                                                <div class="col-auto">
+                                                    <span class="badge bg-primary">Responsável 1</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Nome</label>
+                                                        <input type="text" class="form-control responsavel-nome" value="{{ old('responsavel', $cliente->responsavel ?? '') }}" placeholder="Nome do responsável">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Telefone</label>
+                                                        <input type="text" class="form-control responsavel-telefone" value="{{ old('telefone', $cliente->telefone ?? '') }}" placeholder="(99) 99999-9999">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="form-label">E-mail</label>
+                                                        <input type="email" class="form-control responsavel-email" value="{{ old('email', $cliente->email ?? '') }}" placeholder="email@example.com">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -317,8 +372,98 @@ $(document).ready(function () {
         }
     });
 
+    // Gerenciar responsáveis dinâmicos
+    $('#btnAdicionarResponsavel').on('click', function() {
+        const container = $('#responsaveisContainer');
+        const index = container.find('.responsavel-item').length + 1;
+        
+        const novoResponsavel = `
+            <div class="responsavel-item mb-3 p-3 border rounded" data-responsavel-id="new">
+                <div class="row mb-2">
+                    <div class="col-auto">
+                        <span class="badge bg-primary">Responsável ${index}</span>
+                    </div>
+                    <div class="col-auto ms-auto">
+                        <button type="button" class="btn btn-sm btn-danger btn-remover-responsavel">
+                            <i class="fas fa-trash me-1"></i>Remover
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">Nome</label>
+                            <input type="text" class="form-control responsavel-nome" placeholder="Nome do responsável">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">Telefone</label>
+                            <input type="text" class="form-control responsavel-telefone" placeholder="(99) 99999-9999">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">E-mail</label>
+                            <input type="email" class="form-control responsavel-email" placeholder="email@example.com">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        container.append(novoResponsavel);
+        aplicarMascaraTelefone();
+    });
 
+    // Remover responsável
+    $(document).on('click', '.btn-remover-responsavel', function() {
+        $(this).closest('.responsavel-item').remove();
+    });
 
+    // Aplicar máscara de telefone em responsáveis
+    function aplicarMascaraTelefone() {
+        $('.responsavel-telefone').mask('(00) 00000-0000');
+        $('.responsavel-telefone').off('blur').on('blur', function() {
+            var phone = $(this).val().replace(/\D/g, '');
+            if (phone.length > 10) {
+                $(this).mask('(00) 00000-0000');
+            } else {
+                $(this).mask('(00) 0000-00009');
+            }
+        });
+    }
+
+    // Aplicar máscara inicial aos responsáveis existentes
+    aplicarMascaraTelefone();
+
+    // Interceptar submissão do formulário
+    $('form').on('submit', function(e) {
+        const responsaveis = [];
+        
+        $('#responsaveisContainer .responsavel-item').each(function() {
+            const nome = $(this).find('.responsavel-nome').val();
+            const telefone = $(this).find('.responsavel-telefone').val();
+            const email = $(this).find('.responsavel-email').val();
+            const id = $(this).data('responsavel-id');
+            
+            if (nome || email) {
+                responsaveis.push({
+                    id: id,
+                    nome: nome,
+                    telefone: telefone,
+                    email: email
+                });
+            }
+        });
+
+        // Armazenar dados em campo oculto
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'responsaveis_data',
+            value: JSON.stringify(responsaveis)
+        }).appendTo('form');
+    });
 
     });
 

@@ -395,10 +395,6 @@ class RelatorioController extends Controller
                 $q->whereRaw("LOWER(perfil) = 'motorista'");
             });
 
-<<<<<<< HEAD
-=======
-        // ✅ 2) Filtro por DATA DO SERVIÇO (ordem_servicos.data_servico)
->>>>>>> main
         if ($request->filled('data_inicio') || $request->filled('data_fim')) {
 
             $query->whereHas('ordemServico', function ($q) use ($request) {
@@ -414,18 +410,10 @@ class RelatorioController extends Controller
             });
         }
 
-<<<<<<< HEAD
-=======
-        // ✅ 3) Filtro por motorista específico
->>>>>>> main
         if ($request->filled('motorista_id')) {
             $query->where('entregador_id', $request->motorista_id);
         }
 
-<<<<<<< HEAD
-=======
-        // ✅ 4) Filtro por status de pagamento
->>>>>>> main
         if ($request->filled('status_pagamento')) {
             $query->where('status_pagamento', $request->status_pagamento);
         }
