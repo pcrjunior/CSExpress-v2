@@ -84,11 +84,21 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="relatorioDropdown">
                                 <li><a class="dropdown-item" href="{{ route('relatorios.ordens-servico') }}">Ordem de Serviço</a></li>
+
                                 <li><a class="dropdown-item" href="{{ route('relatorios.clientes-atendidos') }}">Clientes</a></li>
-                                <!-- <li><a class="dropdown-item" href="{{ route('relatorios.entregadores') }}">Entregadores</a></li> -->
+
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('relatorios.clientes-analitico') }}">
+                                        Clientes Analítico
+                                    </a>
+                                </li>
+
                                 <li><a class="dropdown-item" href="{{ route('relatorios.motoristas') }}">Motoristas</a></li>
+
                                 <li><hr class="dropdown-divider"></li>
+
                                 <li class="dropdown-header">Financeiro</li>
+
                                 <li><a class="dropdown-item" href="{{ route('relatorios.contas-pagar') }}">Contas a Pagar</a></li>
                                 <li><a class="dropdown-item" href="{{ route('relatorios.contas-receber') }}">Contas a Receber</a></li>
                             </ul>
@@ -138,7 +148,7 @@
     <script src="{{ asset('js/jquery/mask/1.14.16/jquery/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('js/select2/4.0.13/dist/js/select2.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap/5.3.3/dist/js/bootstrap.bundle.min.js') }}"></script>
-  
+
 
     @stack('scripts')
 </body>

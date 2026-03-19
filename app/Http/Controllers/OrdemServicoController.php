@@ -495,9 +495,6 @@ class OrdemServicoController extends Controller
                 $ordemServico->data_final = now()->toDateString();
             }
 
-
-
-
             // Cálculo do tempo de serviço
             if (!empty($validated['hora_inicial']) && !empty($validated['hora_final'])) {
                 $inicio = \Carbon\Carbon::parse($validated['data_servico'] . ' ' . $validated['hora_inicial']);
