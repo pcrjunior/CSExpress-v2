@@ -946,21 +946,29 @@ class RelatorioController extends Controller
             ->whereNull('deleted_at')
             ->where('status', '!=', 'cancelado');
 
+        $dataInicio = $request->input('data_inicio');
+        $dataFim = $request->input('data_fim');
+
         if ($request->filled('data_inicio')) {
-            $query->whereDate('data_servico', '>=', $request->data_inicio);
+            $query->whereDate('data_servico', '>=', $dataInicio);
         }
 
         if ($request->filled('data_fim')) {
-            $query->whereDate('data_servico', '<=', $request->data_fim);
+            $query->whereDate('data_servico', '<=', $dataFim);
         }
 
         if ($request->filled('motorista_id')) {
             $query->where('motorista_id', $request->motorista_id);
         }
 
-        $ordens = $query->orderBy('data_servico')->get();
+        $ordens = $query->orderBy('motorista_id')->orderBy('data_servico')->get();
 
-        $dados = $ordens->map(function ($os) {
+        // Agrupar por motorista
+        $dadosAgrupados = [];
+        $totalGeralMotorista = 0;
+        $totalGeralAjudante = 0;
+
+        foreach ($ordens as $os) {
             $motorista = $os->motorista;
             $nomeMotorista = $motorista->nome ?? '';
             $apelido = '';
@@ -969,25 +977,36 @@ class RelatorioController extends Controller
                 [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
             }
 
-            return [
+            $motoristaId = $os->motorista_id;
+            if (!isset($dadosAgrupados[$motoristaId])) {
+                $dadosAgrupados[$motoristaId] = [
+                    'nome_motorista' => $nomeMotorista,
+                    'apelido_motorista' => $apelido,
+                    'ordens' => [],
+                    'total_motorista' => 0,
+                    'total_ajudante' => 0,
+                ];
+            }
+
+            $dadosAgrupados[$motoristaId]['ordens'][] = [
                 'numero_os' => $os->numero_os ?? '',
                 'data_servico' => $os->data_servico,
-                'nome_motorista' => $nomeMotorista,
-                'apelido_motorista' => $apelido,
                 'valor_motorista' => (float) ($os->valor_motorista ?? 0),
                 'valor_ajudante' => (float) ($os->valor_ajudantes ?? 0),
             ];
-        });
 
-        $totalMotorista = $dados->sum('valor_motorista');
-        $totalAjudante = $dados->sum('valor_ajudante');
-        $totalGeral = $totalMotorista + $totalAjudante;
+            $dadosAgrupados[$motoristaId]['total_motorista'] += (float) ($os->valor_motorista ?? 0);
+            $dadosAgrupados[$motoristaId]['total_ajudante'] += (float) ($os->valor_ajudantes ?? 0);
+            $totalGeralMotorista += (float) ($os->valor_motorista ?? 0);
+            $totalGeralAjudante += (float) ($os->valor_ajudantes ?? 0);
+        }
 
         $pdf = Pdf::loadView('pdf.motoristas-analitico', [
-            'dados' => $dados,
-            'totalMotorista' => $totalMotorista,
-            'totalAjudante' => $totalAjudante,
-            'totalGeral' => $totalGeral,
+            'dadosAgrupados' => $dadosAgrupados,
+            'dataInicio' => $dataInicio,
+            'dataFim' => $dataFim,
+            'totalGeralMotorista' => $totalGeralMotorista,
+            'totalGeralAjudante' => $totalGeralAjudante,
             'dataAtual' => now()->format('d/m/Y'),
         ]);
 

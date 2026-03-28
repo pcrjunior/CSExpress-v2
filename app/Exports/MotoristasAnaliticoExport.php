@@ -47,32 +47,30 @@ class MotoristasAnaliticoExport implements
             ->whereNull('deleted_at')
             ->where('status', '!=', 'cancelado');
 
+        $dataInicio = $this->request->input('data_inicio');
+        $dataFim = $this->request->input('data_fim');
+
         if ($this->request->filled('data_inicio')) {
-            $query->whereDate('data_servico', '>=', $this->request->data_inicio);
+            $query->whereDate('data_servico', '>=', $dataInicio);
         }
 
         if ($this->request->filled('data_fim')) {
-            $query->whereDate('data_servico', '<=', $this->request->data_fim);
+            $query->whereDate('data_servico', '<=', $dataFim);
         }
 
         if ($this->request->filled('motorista_id')) {
             $query->where('motorista_id', $this->request->motorista_id);
         }
 
-        $ordens = $query->orderBy('data_servico')->get();
+        $ordens = $query->orderBy('motorista_id')->orderBy('data_servico')->get();
 
-        $totalMotorista = 0;
-        $totalAjudante = 0;
+        // Agrupar por motorista
+        $dadosAgrupados = [];
+        $totalGeralMotorista = 0;
+        $totalGeralAjudante = 0;
 
-        $linhas = $ordens->map(function ($os) use (&$totalMotorista, &$totalAjudante) {
-
+        foreach ($ordens as $os) {
             $motorista = $os->motorista;
-            $valorMotorista = (float) $os->valor_motorista;
-            $valorAjudante = (float) $os->valor_ajudantes;
-
-            $totalMotorista += $valorMotorista;
-            $totalAjudante += $valorAjudante;
-
             $nomeMotorista = $motorista->nome ?? '';
             $apelido = '';
             
@@ -80,61 +78,151 @@ class MotoristasAnaliticoExport implements
                 [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
             }
 
-            return [
+            $motoristaId = $os->motorista_id;
+            if (!isset($dadosAgrupados[$motoristaId])) {
+                $dadosAgrupados[$motoristaId] = [
+                    'nome_motorista' => $nomeMotorista,
+                    'apelido_motorista' => $apelido,
+                    'ordens' => [],
+                    'total_motorista' => 0,
+                    'total_ajudante' => 0,
+                ];
+            }
+
+            $valorMotorista = (float) ($os->valor_motorista ?? 0);
+            $valorAjudante = (float) ($os->valor_ajudantes ?? 0);
+
+            $dadosAgrupados[$motoristaId]['ordens'][] = [
                 'numero_os' => $os->numero_os ?? '',
                 'data_servico' => $os->data_servico,
-                'nome_motorista' => $nomeMotorista,
-                'apelido_motorista' => $apelido,
                 'valor_motorista' => $valorMotorista,
                 'valor_ajudante' => $valorAjudante,
             ];
-        });
 
-        // linha em branco
-        $linhas->push([
+            $dadosAgrupados[$motoristaId]['total_motorista'] += $valorMotorista;
+            $dadosAgrupados[$motoristaId]['total_ajudante'] += $valorAjudante;
+            $totalGeralMotorista += $valorMotorista;
+            $totalGeralAjudante += $valorAjudante;
+        }
+
+        // Construir linhas para Excel com agrupamento
+        $linhas = [];
+        $primeiroGrupo = true;
+
+        foreach ($dadosAgrupados as $motorista) {
+            // Linha em branco entre grupos
+            if (!$primeiroGrupo) {
+                $linhas[] = [
+                    'numero_os' => '',
+                    'data_servico' => '',
+                    'nome_motorista' => '',
+                    'apelido_motorista' => '',
+                    'valor_motorista' => '',
+                    'valor_ajudante' => '',
+                ];
+            }
+
+            // Cabeçalho do motorista
+            $nomeCompleto = $motorista['nome_motorista'];
+            if ($motorista['apelido_motorista']) {
+                $nomeCompleto .= ' - ' . $motorista['apelido_motorista'];
+            }
+            $linhas[] = [
+                'numero_os' => 'MOTORISTA: ' . $nomeCompleto,
+                'data_servico' => '',
+                'nome_motorista' => '',
+                'apelido_motorista' => '',
+                'valor_motorista' => '',
+                'valor_ajudante' => '',
+            ];
+
+            // Período
+            $periodo = 'Período: ';
+            if ($dataInicio) {
+                $periodo .= \Carbon\Carbon::parse($dataInicio)->format('d/m/Y');
+            } else {
+                $periodo .= '__/__/____';
+            }
+            $periodo .= ' até ';
+            if ($dataFim) {
+                $periodo .= \Carbon\Carbon::parse($dataFim)->format('d/m/Y');
+            } else {
+                $periodo .= '__/__/____';
+            }
+            $linhas[] = [
+                'numero_os' => $periodo,
+                'data_servico' => '',
+                'nome_motorista' => '',
+                'apelido_motorista' => '',
+                'valor_motorista' => '',
+                'valor_ajudante' => '',
+            ];
+
+            // Linhas de cabeçalho de coluna para cada grupo
+            $linhas[] = [
+                'numero_os' => 'Número OS',
+                'data_servico' => 'Data do Serviço',
+                'nome_motorista' => '',
+                'apelido_motorista' => '',
+                'valor_motorista' => 'Valor Motorista',
+                'valor_ajudante' => 'Valor Ajudante',
+            ];
+
+            // Dados das ordens
+            foreach ($motorista['ordens'] as $ordem) {
+                $linhas[] = [
+                    'numero_os' => $ordem['numero_os'],
+                    'data_servico' => $ordem['data_servico'],
+                    'nome_motorista' => '',
+                    'apelido_motorista' => '',
+                    'valor_motorista' => $ordem['valor_motorista'],
+                    'valor_ajudante' => $ordem['valor_ajudante'],
+                ];
+            }
+
+            // Subtotal do motorista
+            $linhas[] = [
+                'numero_os' => '',
+                'data_servico' => 'SUBTOTAL',
+                'nome_motorista' => '',
+                'apelido_motorista' => '',
+                'valor_motorista' => $motorista['total_motorista'],
+                'valor_ajudante' => $motorista['total_ajudante'],
+            ];
+
+            $primeiroGrupo = false;
+        }
+
+        // Linha em branco
+        $linhas[] = [
             'numero_os' => '',
             'data_servico' => '',
             'nome_motorista' => '',
             'apelido_motorista' => '',
             'valor_motorista' => '',
             'valor_ajudante' => '',
-        ]);
+        ];
 
-        // TOTAL
-        $linhas->push([
+        // TOTAL GERAL
+        $linhas[] = [
             'numero_os' => '',
-            'data_servico' => '',
-            'nome_motorista' => 'TOTAL',
+            'data_servico' => 'TOTAL GERAL',
+            'nome_motorista' => '',
             'apelido_motorista' => '',
-            'valor_motorista' => $totalMotorista,
-            'valor_ajudante' => $totalAjudante,
-        ]);
+            'valor_motorista' => $totalGeralMotorista,
+            'valor_ajudante' => $totalGeralAjudante,
+        ];
 
         return collect($linhas);
     }
 
     public function map($row): array
     {
-        // quando for linha TOTAL (array)
-        if (is_array($row)) {
-
-            if (empty($row['data_servico'])) {
-
-                return [
-                    '',
-                    '',
-                    $row['nome_motorista'] ?? '',
-                    $row['apelido_motorista'] ?? '',
-                    $row['valor_motorista'] ?? '',
-                    $row['valor_ajudante'] ?? '',
-                ];
-            }
-
+        // se data_servico está vazia, não precisa formatar data
+        if (empty($row['data_servico'])) {
             return [
                 $row['numero_os'] ?? '',
-                Date::dateTimeToExcel(
-                    \Carbon\Carbon::parse($row['data_servico'])
-                ),
+                $row['data_servico'] ?? '',
                 $row['nome_motorista'] ?? '',
                 $row['apelido_motorista'] ?? '',
                 $row['valor_motorista'] ?? '',
@@ -142,35 +230,27 @@ class MotoristasAnaliticoExport implements
             ];
         }
 
-        // quando for OrdemServico
-        $motorista = $row->motorista;
-        $nomeMotorista = $motorista->nome ?? '';
-        $apelido = '';
-        
-        if (strpos($nomeMotorista, ' - ') !== false) {
-            [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
-        }
-
+        // formatar a data
         return [
-            $row->numero_os ?? '',
+            $row['numero_os'] ?? '',
             Date::dateTimeToExcel(
-                \Carbon\Carbon::parse($row->data_servico)
+                \Carbon\Carbon::parse($row['data_servico'])
             ),
-            $nomeMotorista,
-            $apelido,
-            (float) $row->valor_motorista,
-            (float) $row->valor_ajudantes,
+            $row['nome_motorista'] ?? '',
+            $row['apelido_motorista'] ?? '',
+            $row['valor_motorista'] ?? '',
+            $row['valor_ajudante'] ?? '',
         ];
     }
 
     public function columnFormats(): array
     {
         return [
-            // Data
+            // Data (coluna B) - FORMAT_DATE_DDMMYYYY
             'B' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            // Valor Motorista
+            // Valor Motorista (coluna E)
             'E' => '"R$" #,##0.00',
-            // Valor Ajudante
+            // Valor Ajudante (coluna F)
             'F' => '"R$" #,##0.00',
         ];
     }

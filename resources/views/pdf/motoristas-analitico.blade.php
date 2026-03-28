@@ -49,21 +49,6 @@
             font-weight: bold;
         }
 
-        .text-success {
-            color: #28a745;
-            font-weight: bold;
-        }
-
-        .text-danger {
-            color: #dc3545;
-            font-weight: bold;
-        }
-
-        .numero-os {
-            white-space: nowrap;
-            font-weight: bold;
-        }
-
         footer {
             position: fixed;
             bottom: 20px;
@@ -90,6 +75,34 @@
             text-align: right;
             color: #666;
         }
+
+        .motorista-section {
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .motorista-header {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .periodo-info {
+            font-size: 9px;
+            margin-bottom: 3px;
+            color: #555;
+        }
+
+        .section-break {
+            page-break-inside: avoid;
+        }
+
+        .total-section {
+            margin-top: 10px;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
         </style>
 
     </head>
@@ -103,7 +116,7 @@
                     <img src="{{ public_path('images/ecs-logo.png') }}" class="logo">
                 </td>
                 <td style="width: 60%;" class="report-title">
-                    Relatório Analítico de Motoristas
+                    Relatório do Motorista - Analítico
                 </td>
                 <td style="width: 20%;" class="report-date">
                     <strong>Data:</strong> {{ now()->format('d/m/Y H:i') }}
@@ -111,55 +124,81 @@
             </tr>
         </table>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Número OS</th>
-                    <th>Data do Serviço</th>
-                    <th>Nome Motorista</th>
-                    <th>Apelido</th>
-                    <th class="text-end">Valor Motorista</th>
-                    <th class="text-end">Valor Ajudante</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($dados as $d)
-                <tr>
-                    <td>
-                        {{ $d['numero_os'] }}
-                    </td>
-                    <td>
-                        {{ \Carbon\Carbon::parse($d['data_servico'])->format('d/m/y') }}
-                    </td>
-                    <td>
-                        {{ $d['nome_motorista'] }}
-                    </td>
-                    <td>
-                        {{ $d['apelido_motorista'] }}
-                    </td>
+        @foreach($dadosAgrupados as $motorista)
+        <div class="section-break">
+            <div class="motorista-section">
+                <div class="periodo-info">
+                    <strong>Período:</strong> 
+                    {{ $dataInicio ? \Carbon\Carbon::parse($dataInicio)->format('d/m/Y') : '__/__/___' }} 
+                    até 
+                    {{ $dataFim ? \Carbon\Carbon::parse($dataFim)->format('d/m/Y') : '__/__/___' }}
+                </div>
+                <div class="motorista-header">
+                    Nome: {{ $motorista['nome_motorista'] }}{{ $motorista['apelido_motorista'] ? ' - ' . $motorista['apelido_motorista'] : '' }}
+                </div>
+            </div>
 
-                    <td class="text-end">
-                        R$ {{ number_format($d['valor_motorista'],2,',','.') }}
-                    </td>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Número OS</th>
+                        <th>Data do Serviço</th>
+                        <th class="text-end">Valor Motorista</th>
+                        <th class="text-end">Valor Ajudante</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($motorista['ordens'] as $ordem)
+                    <tr>
+                        <td>
+                            {{ $ordem['numero_os'] }}
+                        </td>
+                        <td>
+                            {{ \Carbon\Carbon::parse($ordem['data_servico'])->format('d/m/y') }}
+                        </td>
+                        <td class="text-end">
+                            R$ {{ number_format($ordem['valor_motorista'], 2, ',', '.') }}
+                        </td>
+                        <td class="text-end">
+                            R$ {{ number_format($ordem['valor_ajudante'], 2, ',', '.') }}
+                        </td>
+                    </tr>
+                    @endforeach
+                    <tr class="total-section">
+                        <td colspan="2" class="text-end">
+                            TOTAL MOTORISTA
+                        </td>
+                        <td class="text-end">
+                            R$ {{ number_format($motorista['total_motorista'], 2, ',', '.') }}
+                        </td>
+                        <td class="text-end">
+                            R$ {{ number_format($motorista['total_ajudante'], 2, ',', '.') }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        @endforeach
 
-                    <td class="text-end">
-                        R$ {{ number_format($d['valor_ajudante'],2,',','.') }}
-                    </td>
+        @if(count($dadosAgrupados) > 1)
+        <div style="margin-top: 20px; border-top: 2px solid #333; padding-top: 10px;">
+            <table>
+                <tbody>
+                    <tr class="total-section">
+                        <td colspan="2" class="text-end">
+                            TOTAL GERAL
+                        </td>
+                        <td class="text-end">
+                            R$ {{ number_format($totalGeralMotorista, 2, ',', '.') }}
+                        </td>
+                        <td class="text-end">
+                            R$ {{ number_format($totalGeralAjudante, 2, ',', '.') }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        @endif
 
-                </tr>
-                @endforeach
-                <tr class="total">
-                    <td colspan="4" class="text-end">
-                        TOTAL
-                    </td>
-                    <td class="text-end">
-                        R$ {{ number_format($totalMotorista,2,',','.') }}
-                    </td>
-                    <td class="text-end">
-                        R$ {{ number_format($totalAjudante,2,',','.') }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </body>
 </html>
