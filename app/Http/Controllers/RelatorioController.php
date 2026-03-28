@@ -15,6 +15,7 @@ use App\Exports\OrdemServicoExport;
 use App\Exports\EntregadoresExport;
 use App\Exports\ClientesAtendidosExport;
 use App\Exports\ClientesAnaliticoExport;
+use App\Exports\MotoristasAnaliticoExport;
 
 
 
@@ -759,6 +760,24 @@ class RelatorioController extends Controller
         return Excel::download(new MotoristasExport($dados), 'relatorio-motoristas.xlsx');
     }
 
+    public function exportarMotoristasPDF(Request $request)
+    {
+        $dados = collect($this->gerarRelatorioMotoristas($request));
+
+        // Se as datas não forem especificadas, usar período padrão
+        $dataInicio = $request->input('data_inicio') ?? '2025-01-01';
+        $dataFim = $request->input('data_fim') ?? '2030-01-01';
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.relatorio-motoristas', [
+            'dados' => $dados,
+            'data_inicio' => $dataInicio,
+            'data_fim' => $dataFim,
+            'dataAtual' => now()->format('d/m/Y'),
+        ]);
+
+        return $pdf->download('relatorio-motoristas.pdf');
+    }
+
     public function exportarEntregadoresExcel(Request $request)
     {
         return Excel::download(new EntregadoresExport($request), 'relatorio-entregadores.xlsx');
@@ -926,6 +945,157 @@ class RelatorioController extends Controller
             'clientes' => $clientes,
             'totalCarro' => $totalCarro,
             'totalAjudantes' => $totalAjudantes,
+            'totalGeral' => $totalGeral,
+        ]);
+    }
+
+    public function exportarMotoristasAnaliticoExcel(Request $request)
+    {
+        return Excel::download(
+            new MotoristasAnaliticoExport($request),
+            'motoristas-analitico.xlsx'
+        );
+    }
+
+    public function exportarMotoristasAnaliticoPDF(Request $request)
+    {
+        $query = OrdemServico::query()
+            ->with(['motorista', 'ajudantes'])
+            ->whereNull('deleted_at')
+            ->where('status', '!=', 'cancelado');
+
+        // Se as datas não forem especificadas, usar período padrão
+        $dataInicio = $request->input('data_inicio') ?? '2025-01-01';
+        $dataFim = $request->input('data_fim') ?? '2030-01-01';
+
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('data_servico', '>=', $dataInicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('data_servico', '<=', $dataFim);
+        }
+
+        if ($request->filled('motorista_id')) {
+            $query->where('motorista_id', $request->motorista_id);
+        }
+
+        $ordens = $query->orderBy('motorista_id')->orderBy('data_servico')->get();
+
+        // Agrupar por motorista
+        $dadosAgrupados = [];
+        $totalGeralMotorista = 0;
+        $totalGeralAjudante = 0;
+
+        foreach ($ordens as $os) {
+            $motorista = $os->motorista;
+            $nomeMotorista = $motorista->nome ?? '';
+            $apelido = '';
+            
+            if (strpos($nomeMotorista, ' - ') !== false) {
+                [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
+            }
+
+            $motoristaId = $os->motorista_id;
+            if (!isset($dadosAgrupados[$motoristaId])) {
+                $dadosAgrupados[$motoristaId] = [
+                    'nome_motorista' => $nomeMotorista,
+                    'apelido_motorista' => $apelido,
+                    'ordens' => [],
+                    'total_motorista' => 0,
+                    'total_ajudante' => 0,
+                ];
+            }
+
+            $dadosAgrupados[$motoristaId]['ordens'][] = [
+                'numero_os' => $os->numero_os ?? '',
+                'data_servico' => \Carbon\Carbon::parse($os->data_servico)->format('d/m/Y'),
+                'valor_motorista' => 'R$ ' . number_format((float) ($os->valor_motorista ?? 0), 2, ',', '.'),
+                'valor_ajudante' => 'R$ ' . number_format((float) ($os->valor_ajudantes ?? 0), 2, ',', '.'),
+            ];
+
+            $dadosAgrupados[$motoristaId]['total_motorista'] += (float) ($os->valor_motorista ?? 0);
+            $dadosAgrupados[$motoristaId]['total_ajudante'] += (float) ($os->valor_ajudantes ?? 0);
+            $totalGeralMotorista += (float) ($os->valor_motorista ?? 0);
+            $totalGeralAjudante += (float) ($os->valor_ajudantes ?? 0);
+        }
+
+        // Formatar totais de cada motorista
+        foreach ($dadosAgrupados as &$motorista) {
+            $motorista['total_motorista_formatado'] = 'R$ ' . number_format($motorista['total_motorista'], 2, ',', '.');
+            $motorista['total_ajudante_formatado'] = 'R$ ' . number_format($motorista['total_ajudante'], 2, ',', '.');
+        }
+
+        $pdf = Pdf::loadView('pdf.motoristas-analitico', [
+            'dadosAgrupados' => $dadosAgrupados,
+            'dataInicio' => $dataInicio,
+            'dataFim' => $dataFim,
+            'totalGeralMotorista' => 'R$ ' . number_format($totalGeralMotorista, 2, ',', '.'),
+            'totalGeralAjudante' => 'R$ ' . number_format($totalGeralAjudante, 2, ',', '.'),
+            'dataAtual' => now()->format('d/m/Y'),
+        ]);
+
+        return $pdf->download('motoristas-analitico.pdf');
+    }
+
+    public function relatorioMotoristasAnalitico(Request $request)
+    {
+        $query = OrdemServico::query()
+            ->with(['motorista', 'ajudantes'])
+            ->whereNull('deleted_at')
+            ->where('status', '!=', 'cancelado');
+
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('data_servico', '>=', $request->data_inicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('data_servico', '<=', $request->data_fim);
+        }
+
+        if ($request->filled('motorista_id')) {
+            $query->where('motorista_id', $request->motorista_id);
+        }
+
+        // TOTAL SEM PAGINAÇÃO
+        $totalMotorista = (clone $query)->sum('valor_motorista');
+        $totalAjudante = (clone $query)->sum('valor_ajudantes');
+        $totalGeral = $totalMotorista + $totalAjudante;
+
+        // PAGINAÇÃO
+        $ordens = $query
+            ->orderBy('data_servico')
+            ->orderBy('id')
+            ->paginate(15)
+            ->appends($request->query());
+
+        $dados = $ordens->getCollection()->map(function ($os) {
+            $motorista = $os->motorista;
+            $nomeMotorista = $motorista->nome ?? '';
+            $apelido = '';
+            
+            if (strpos($nomeMotorista, ' - ') !== false) {
+                [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
+            }
+
+            return [
+                'numero_os' => $os->numero_os ?? '',
+                'data_servico' => $os->data_servico,
+                'nome_motorista' => $nomeMotorista,
+                'apelido_motorista' => $apelido,
+                'valor_motorista' => (float) $os->valor_motorista,
+                'valor_ajudante' => (float) $os->valor_ajudantes,
+            ];
+        });
+
+        $ordens->setCollection($dados);
+        $motoristas = Entregador::where('perfil', 'motorista')->orderBy('nome')->get();
+
+        return view('relatorios.motoristas-analitico', [
+            'dados' => $ordens,
+            'motoristas' => $motoristas,
+            'totalMotorista' => $totalMotorista,
+            'totalAjudante' => $totalAjudante,
             'totalGeral' => $totalGeral,
         ]);
     }

@@ -95,6 +95,12 @@
 
                                 <li><a class="dropdown-item" href="{{ route('relatorios.motoristas') }}">Motoristas</a></li>
 
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('relatorios.motoristas-analitico') }}">
+                                        Motoristas Analítico
+                                    </a>
+                                </li>
+
                                 <li><hr class="dropdown-divider"></li>
 
                                 <li class="dropdown-header">Financeiro</li>

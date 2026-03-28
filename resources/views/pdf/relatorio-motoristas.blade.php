@@ -11,9 +11,27 @@
             color: #333;
         }
 
-        h2 {
+        .logo {
+            height: 40px;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .report-title {
+            font-size: 16px;
+            font-weight: bold;
             text-align: center;
-            margin-bottom: 10px;
+        }
+
+        .report-date {
+            font-size: 10px;
+            text-align: right;
+            color: #666;
         }
 
         p {
@@ -59,7 +77,20 @@
 </head>
 <body>
 
-    <h2>Relatório de Motoristas</h2>
+    <!-- Cabeçalho -->
+    <table class="header-table">
+        <tr>
+            <td style="width: 20%;">
+                <img src="{{ public_path('images/ecs-logo.png') }}" class="logo">
+            </td>
+            <td style="width: 60%;" class="report-title">
+                Relatório de Motoristas
+            </td>
+            <td style="width: 20%;" class="report-date">
+                <strong>Data:</strong> {{ now()->format('d/m/Y H:i') }}
+            </td>
+        </tr>
+    </table>
 
     <div class="periodo">
         <p><strong>Período:</strong>
