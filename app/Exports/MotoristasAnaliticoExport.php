@@ -78,8 +78,8 @@ class MotoristasAnaliticoExport implements
             $dadosAgrupados[$motoristaId]['ordens'][] = [
                 'numero_os' => $os->numero_os ?? '',
                 'data_servico' => \Carbon\Carbon::parse($os->data_servico)->format('d/m/Y'),
-                'valor_motorista' => $valorMotorista,
-                'valor_ajudante' => $valorAjudante,
+                'valor_motorista' => 'R$ ' . number_format($valorMotorista, 2, ',', '.'),
+                'valor_ajudante' => 'R$ ' . number_format($valorAjudante, 2, ',', '.'),
             ];
 
             $dadosAgrupados[$motoristaId]['total_motorista'] += $valorMotorista;
@@ -169,8 +169,8 @@ class MotoristasAnaliticoExport implements
                 'data_servico' => 'SUBTOTAL',
                 'nome_motorista' => '',
                 'apelido_motorista' => '',
-                'valor_motorista' => $motorista['total_motorista'],
-                'valor_ajudante' => $motorista['total_ajudante'],
+                'valor_motorista' => 'R$ ' . number_format($motorista['total_motorista'], 2, ',', '.'),
+                'valor_ajudante' => 'R$ ' . number_format($motorista['total_ajudante'], 2, ',', '.'),
             ];
 
             $primeiroGrupo = false;
@@ -192,8 +192,8 @@ class MotoristasAnaliticoExport implements
             'data_servico' => 'TOTAL GERAL',
             'nome_motorista' => '',
             'apelido_motorista' => '',
-            'valor_motorista' => $totalGeralMotorista,
-            'valor_ajudante' => $totalGeralAjudante,
+            'valor_motorista' => 'R$ ' . number_format($totalGeralMotorista, 2, ',', '.'),
+            'valor_ajudante' => 'R$ ' . number_format($totalGeralAjudante, 2, ',', '.'),
         ];
 
         return collect($linhas);
