@@ -30,8 +30,9 @@ class MotoristasAnaliticoExport implements
             ->whereNull('deleted_at')
             ->where('status', '!=', 'cancelado');
 
-        $dataInicio = $this->request->input('data_inicio');
-        $dataFim = $this->request->input('data_fim');
+        // Se as datas não forem especificadas, usar período padrão
+        $dataInicio = $this->request->input('data_inicio') ?? '2025-01-01';
+        $dataFim = $this->request->input('data_fim') ?? '2030-01-01';
 
         if ($this->request->filled('data_inicio')) {
             $query->whereDate('data_servico', '>=', $dataInicio);
