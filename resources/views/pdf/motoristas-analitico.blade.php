@@ -7,17 +7,18 @@
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 10px;
-            margin: 25px 30px 60px 30px;
+            margin: 15px 20px 40px 20px;
             color: #333;
         }
 
         .logo {
-            height: 40px;
+            height: 35px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 3px;
         }
 
         th {
@@ -25,13 +26,13 @@
             font-weight: bold;
             font-size: 9px;
             border: 1px solid #ccc;
-            padding: 6px;
+            padding: 4px;
             text-align: left;
         }
 
         td {
             font-size: 8px;
-            padding: 6px;
+            padding: 4px;
             border: 1px solid #ccc;
             vertical-align: middle;
         }
@@ -60,7 +61,7 @@
         }
 
         .header-table {
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             border-bottom: 1px solid #ccc;
         }
 
@@ -77,19 +78,19 @@
         }
 
         .motorista-section {
-            margin-top: 8px;
-            margin-bottom: 8px;
+            margin-top: 5px;
+            margin-bottom: 5px;
         }
 
         .motorista-header {
             font-size: 11px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .periodo-info {
             font-size: 9px;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             color: #555;
         }
 
