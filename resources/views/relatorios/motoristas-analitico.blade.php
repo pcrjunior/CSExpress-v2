@@ -31,8 +31,15 @@
                                 <select class="form-select select2-motoristas" name="motorista_id" style="width: 100%;">
                                     <option value="">Todos</option>
                                     @foreach($motoristas as $motorista)
+                                        @php
+                                            $nomeMotorista = $motorista->nome;
+                                            $apelido = '';
+                                            if (strpos($nomeMotorista, ' - ') !== false) {
+                                                [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
+                                            }
+                                        @endphp
                                         <option value="{{ $motorista->id }}" {{ request('motorista_id') == $motorista->id ? 'selected' : '' }}>
-                                            {{ $motorista->nome }} ({{ $motorista->apelido }})
+                                            {{ $nomeMotorista }}{{ $apelido ? ' - ' . $apelido : '' }}
                                         </option>
                                     @endforeach
                                 </select>
