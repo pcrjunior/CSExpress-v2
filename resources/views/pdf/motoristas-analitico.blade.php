@@ -7,7 +7,7 @@
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 10px;
-            margin: 15px 20px 40px 20px;
+            margin: 10px 15px 40px 15px;
             color: #333;
         }
 
@@ -61,7 +61,7 @@
         }
 
         .header-table {
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             border-bottom: 1px solid #ccc;
         }
 
@@ -78,7 +78,7 @@
         }
 
         .motorista-section {
-            margin-top: 5px;
+            margin-top: 2px;
             margin-bottom: 5px;
         }
 
@@ -94,12 +94,8 @@
             color: #555;
         }
 
-        .section-break {
-            page-break-inside: avoid;
-        }
-
         .total-section {
-            margin-top: 10px;
+            margin-top: 5px;
             font-size: 9px;
             font-weight: bold;
         }
@@ -126,8 +122,8 @@
         </table>
 
         @foreach($dadosAgrupados as $motorista)
-        <div class="section-break">
-            <div class="motorista-section">
+        <div @if($loop->first) style="margin-top: 0;" @endif>
+            <div class="motorista-section" @if($loop->first) style="margin-top: 0;" @endif>
                 <div class="periodo-info">
                     <strong>Período:</strong> 
                     {{ $dataInicio ? \Carbon\Carbon::parse($dataInicio)->format('d/m/Y') : '__/__/___' }} 
