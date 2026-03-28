@@ -962,11 +962,18 @@ class RelatorioController extends Controller
 
         $dados = $ordens->map(function ($os) {
             $motorista = $os->motorista;
+            $nomeMotorista = $motorista->nome ?? '';
+            $apelido = '';
+            
+            if (strpos($nomeMotorista, ' - ') !== false) {
+                [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
+            }
 
             return [
                 'numero_os' => $os->numero_os ?? '',
                 'data_servico' => $os->data_servico,
-                'nome_motorista' => $motorista->nome ?? '',
+                'nome_motorista' => $nomeMotorista,
+                'apelido_motorista' => $apelido,
                 'valor_motorista' => (float) ($os->valor_motorista ?? 0),
                 'valor_ajudante' => (float) ($os->valor_ajudantes ?? 0),
             ];
@@ -1020,11 +1027,18 @@ class RelatorioController extends Controller
 
         $dados = $ordens->getCollection()->map(function ($os) {
             $motorista = $os->motorista;
+            $nomeMotorista = $motorista->nome ?? '';
+            $apelido = '';
+            
+            if (strpos($nomeMotorista, ' - ') !== false) {
+                [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
+            }
 
             return [
                 'numero_os' => $os->numero_os ?? '',
                 'data_servico' => $os->data_servico,
-                'nome_motorista' => $motorista->nome ?? '',
+                'nome_motorista' => $nomeMotorista,
+                'apelido_motorista' => $apelido,
                 'valor_motorista' => (float) $os->valor_motorista,
                 'valor_ajudante' => (float) $os->valor_ajudantes,
             ];

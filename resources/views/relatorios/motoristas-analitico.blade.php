@@ -93,6 +93,7 @@
                             <th>Número OS</th>
                             <th>Data do Serviço</th>
                             <th>Nome Motorista</th>
+                            <th>Apelido</th>
                             <th class="text-end">Valor Motorista</th>
                             <th class="text-end">Valor Ajudante</th>
                         </tr>
@@ -103,12 +104,13 @@
                                 <td>{{ $item['numero_os'] }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item['data_servico'])->format('d/m/y') }}</td>
                                 <td>{{ $item['nome_motorista'] }}</td>
+                                <td>{{ $item['apelido_motorista'] }}</td>
                                 <td class="text-end">R$ {{ number_format($item['valor_motorista'], 2, ',', '.') }}</td>
                                 <td class="text-end">R$ {{ number_format($item['valor_ajudante'], 2, ',', '.') }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-4 text-muted">
+                                <td colspan="6" class="text-center py-4 text-muted">
                                     Nenhum registro encontrado.
                                 </td>
                             </tr>
@@ -117,12 +119,12 @@
                     @if($dados->count())
                         <tfoot>
                             <tr>
-                                <th colspan="3" class="text-end"></th>
+                                <th colspan="4" class="text-end"></th>
                                 <th class="text-end">R$ {{ number_format($totalMotorista, 2, ',', '.') }}</th>
                                 <th class="text-end">R$ {{ number_format($totalAjudante, 2, ',', '.') }}</th>
                             </tr>
                             <tr>
-                                <th colspan="3" class="text-end">TOTAL GERAL</th>
+                                <th colspan="4" class="text-end">TOTAL GERAL</th>
                                 <th class="text-end">R$ {{ number_format($totalMotorista, 2, ',', '.') }}</th>
                                 <th class="text-end">R$ {{ number_format($totalAjudante, 2, ',', '.') }}</th>
                             </tr>

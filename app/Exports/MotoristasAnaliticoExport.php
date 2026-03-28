@@ -33,7 +33,13 @@ class MotoristasAnaliticoExport implements
         return [
             'Número OS',
             'Data do Serviço',
-                'Nome Motorista',
+            'Nome Motorista',
+            'Apelido',
+            'Valor Motorista',
+            'Valor Ajudante',
+        ];
+    }
+
     public function collection()
     {
         $query = OrdemServico::query()
@@ -67,10 +73,18 @@ class MotoristasAnaliticoExport implements
             $totalMotorista += $valorMotorista;
             $totalAjudante += $valorAjudante;
 
+            $nomeMotorista = $motorista->nome ?? '';
+            $apelido = '';
+            
+            if (strpos($nomeMotorista, ' - ') !== false) {
+                [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
+            }
+
             return [
                 'numero_os' => $os->numero_os ?? '',
                 'data_servico' => $os->data_servico,
-                'nome_motorista' => $motorista->nome ?? '',
+                'nome_motorista' => $nomeMotorista,
+                'apelido_motorista' => $apelido,
                 'valor_motorista' => $valorMotorista,
                 'valor_ajudante' => $valorAjudante,
             ];
@@ -81,6 +95,7 @@ class MotoristasAnaliticoExport implements
             'numero_os' => '',
             'data_servico' => '',
             'nome_motorista' => '',
+            'apelido_motorista' => '',
             'valor_motorista' => '',
             'valor_ajudante' => '',
         ]);
@@ -90,6 +105,7 @@ class MotoristasAnaliticoExport implements
             'numero_os' => '',
             'data_servico' => '',
             'nome_motorista' => 'TOTAL',
+            'apelido_motorista' => '',
             'valor_motorista' => $totalMotorista,
             'valor_ajudante' => $totalAjudante,
         ]);
@@ -108,6 +124,7 @@ class MotoristasAnaliticoExport implements
                     '',
                     '',
                     $row['nome_motorista'] ?? '',
+                    $row['apelido_motorista'] ?? '',
                     $row['valor_motorista'] ?? '',
                     $row['valor_ajudante'] ?? '',
                 ];
@@ -119,6 +136,7 @@ class MotoristasAnaliticoExport implements
                     \Carbon\Carbon::parse($row['data_servico'])
                 ),
                 $row['nome_motorista'] ?? '',
+                $row['apelido_motorista'] ?? '',
                 $row['valor_motorista'] ?? '',
                 $row['valor_ajudante'] ?? '',
             ];
@@ -126,13 +144,20 @@ class MotoristasAnaliticoExport implements
 
         // quando for OrdemServico
         $motorista = $row->motorista;
+        $nomeMotorista = $motorista->nome ?? '';
+        $apelido = '';
+        
+        if (strpos($nomeMotorista, ' - ') !== false) {
+            [$nomeMotorista, $apelido] = explode(' - ', $nomeMotorista, 2);
+        }
 
         return [
             $row->numero_os ?? '',
             Date::dateTimeToExcel(
                 \Carbon\Carbon::parse($row->data_servico)
             ),
-            $motorista->nome ?? '',
+            $nomeMotorista,
+            $apelido,
             (float) $row->valor_motorista,
             (float) $row->valor_ajudantes,
         ];
@@ -144,9 +169,9 @@ class MotoristasAnaliticoExport implements
             // Data
             'B' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             // Valor Motorista
-            'D' => '"R$" #,##0.00',
-            // Valor Ajudante
             'E' => '"R$" #,##0.00',
+            // Valor Ajudante
+            'F' => '"R$" #,##0.00',
         ];
     }
 }

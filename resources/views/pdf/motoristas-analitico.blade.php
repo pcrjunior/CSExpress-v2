@@ -117,6 +117,7 @@
                     <th>Número OS</th>
                     <th>Data do Serviço</th>
                     <th>Nome Motorista</th>
+                    <th>Apelido</th>
                     <th class="text-end">Valor Motorista</th>
                     <th class="text-end">Valor Ajudante</th>
                 </tr>
@@ -133,6 +134,9 @@
                     <td>
                         {{ $d['nome_motorista'] }}
                     </td>
+                    <td>
+                        {{ $d['apelido_motorista'] }}
+                    </td>
 
                     <td class="text-end">
                         R$ {{ number_format($d['valor_motorista'],2,',','.') }}
@@ -145,7 +149,7 @@
                 </tr>
                 @endforeach
                 <tr class="total">
-                    <td colspan="3" class="text-end">
+                    <td colspan="4" class="text-end">
                         TOTAL
                     </td>
                     <td class="text-end">
