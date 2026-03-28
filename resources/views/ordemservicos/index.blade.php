@@ -7,25 +7,6 @@
 
 <div class="container-fluid py-4">
 
-    <!-- Alerta de OS Agendadas -->
-    @if($temOSAgendada)
-    <div class="row mb-3">
-        <div class="col-12">
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fas fa-calendar-alt me-2"></i>
-                        <strong>Existem OS agendada que devem ser tratadas</strong>
-                    </div>
-                    <a href="{{ route('ordemservicos', ['agendada' => '1']) }}" class="btn btn-warning btn-sm">
-                        <i class="fas fa-filter me-1"></i> OS Agendada
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-
     <!-- Card de título -->
     <div class="row mb-1">
         <div class="col-12 mb-2">
@@ -33,7 +14,20 @@
                 <div class="card-header bg-header-blue">
                     <h5 class="mb-0"><i class="fas fa-users me-2"></i>Ordem de Serviço</h5>
                 </div>
-                <div class="card-body d-flex justify-content-between align-items-center">
+                <div class="card-body">
+                    @if($temOSAgendada)
+                    <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                <strong>Existem OS agendada que devem ser tratadas</strong>
+                            </div>
+                            <a href="{{ route('ordemservicos', ['agendada' => '1']) }}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-filter me-1"></i> OS Agendada
+                            </a>
+                        </div>
+                    </div>
+                    @endif
                     <a href="{{ route('ordemservicos.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus me-1"></i> Nova Ordem
                     </a>
