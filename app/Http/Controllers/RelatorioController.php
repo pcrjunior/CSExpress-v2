@@ -764,10 +764,14 @@ class RelatorioController extends Controller
     {
         $dados = collect($this->gerarRelatorioMotoristas($request));
 
+        // Se as datas não forem especificadas, usar período padrão
+        $dataInicio = $request->input('data_inicio') ?? '2025-01-01';
+        $dataFim = $request->input('data_fim') ?? '2030-01-01';
+
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.relatorio-motoristas', [
             'dados' => $dados,
-            'data_inicio' => $request->input('data_inicio'),
-            'data_fim' => $request->input('data_fim'),
+            'data_inicio' => $dataInicio,
+            'data_fim' => $dataFim,
             'dataAtual' => now()->format('d/m/Y'),
         ]);
 
@@ -960,8 +964,9 @@ class RelatorioController extends Controller
             ->whereNull('deleted_at')
             ->where('status', '!=', 'cancelado');
 
-        $dataInicio = $request->input('data_inicio');
-        $dataFim = $request->input('data_fim');
+        // Se as datas não forem especificadas, usar período padrão
+        $dataInicio = $request->input('data_inicio') ?? '2025-01-01';
+        $dataFim = $request->input('data_fim') ?? '2030-01-01';
 
         if ($request->filled('data_inicio')) {
             $query->whereDate('data_servico', '>=', $dataInicio);
