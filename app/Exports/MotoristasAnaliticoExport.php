@@ -15,7 +15,6 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class MotoristasAnaliticoExport implements
     FromCollection,
-    WithHeadings,
     WithMapping,
     WithColumnFormatting,
     ShouldAutoSize
@@ -26,18 +25,6 @@ class MotoristasAnaliticoExport implements
     public function __construct($request)
     {
         $this->request = $request;
-    }
-
-    public function headings(): array
-    {
-        return [
-            'Número OS',
-            'Data do Serviço',
-            'Nome Motorista',
-            'Apelido',
-            'Valor Motorista',
-            'Valor Ajudante',
-        ];
     }
 
     public function collection()
@@ -159,14 +146,15 @@ class MotoristasAnaliticoExport implements
             ];
 
             // Linhas de cabeçalho de coluna para cada grupo
-            $linhas[] = [
-                'numero_os' => 'Número OS',
-                'data_servico' => 'Data do Serviço',
-                'nome_motorista' => '',
-                'apelido_motorista' => '',
-                'valor_motorista' => 'Valor Motorista',
-                'valor_ajudante' => 'Valor Ajudante',
-            ];
+            // Comentado pois não exibe bem no layout agrupado
+            // $linhas[] = [
+            //     'numero_os' => 'Número OS',
+            //     'data_servico' => 'Data do Serviço',
+            //     'nome_motorista' => '',
+            //     'apelido_motorista' => '',
+            //     'valor_motorista' => 'Valor Motorista',
+            //     'valor_ajudante' => 'Valor Ajudante',
+            // ];
 
             // Dados das ordens
             foreach ($motorista['ordens'] as $ordem) {
