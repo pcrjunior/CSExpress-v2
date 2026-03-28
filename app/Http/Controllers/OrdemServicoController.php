@@ -509,6 +509,16 @@ class OrdemServicoController extends Controller
             'data_final'                  => 'nullable|date',
         ]);
 
+        // 🔒 TRAVA: Não permite concluir OS com motorista temporário
+        if ($validated['status'] === 'concluido') {
+            $motorista = \App\Models\Entregador::find($validated['motorista_id']);
+            if ($motorista && strtolower($motorista->nome) === strtolower('motorista temporario')) {
+                return back()->withErrors([
+                    'status' => 'Não é permitido concluir uma Ordem de Serviço com motorista temporário. Altere o motorista responsável antes de concluir.'
+                ])->withInput();
+            }
+        }
+
         if ($validated['status'] === 'concluido') {
 
             if ($request->filled('hora_final')) {
