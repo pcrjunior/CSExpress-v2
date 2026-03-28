@@ -60,7 +60,7 @@
         }
 
         .header-table {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #ccc;
         }
 
@@ -77,8 +77,8 @@
         }
 
         .motorista-section {
-            margin-top: 20px;
-            margin-bottom: 15px;
+            margin-top: 8px;
+            margin-bottom: 8px;
         }
 
         .motorista-header {

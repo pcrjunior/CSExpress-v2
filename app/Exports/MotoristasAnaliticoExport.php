@@ -230,12 +230,28 @@ class MotoristasAnaliticoExport implements
             ];
         }
 
+        // verificar se é uma data válida antes de tentar parseá-la
+        $dataServico = $row['data_servico'];
+        $dataParsed = null;
+        
+        try {
+            // Verificar se é uma string que parece ser data (pode ser formatada com / ou -)
+            if (is_string($dataServico) && (strpos($dataServico, '-') !== false || strpos($dataServico, '/') !== false)) {
+                $dataParsed = Date::dateTimeToExcel(
+                    \Carbon\Carbon::parse($dataServico)
+                );
+            } else {
+                $dataParsed = $dataServico;
+            }
+        } catch (\Exception $e) {
+            // Se não conseguir parsear, retorna como string
+            $dataParsed = $dataServico;
+        }
+
         // formatar a data
         return [
             $row['numero_os'] ?? '',
-            Date::dateTimeToExcel(
-                \Carbon\Carbon::parse($row['data_servico'])
-            ),
+            $dataParsed,
             $row['nome_motorista'] ?? '',
             $row['apelido_motorista'] ?? '',
             $row['valor_motorista'] ?? '',
