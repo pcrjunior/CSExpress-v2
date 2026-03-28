@@ -286,6 +286,15 @@ Route::middleware(['auth'])->group(function () {
             ->name('clientes-analitico.exportar');
         Route::get('/clientes-analitico/excel', [RelatorioController::class, 'exportarClientesAnaliticoExcel'])
             ->name('clientes-analitico.excel');
+
+        // RELATÓRIO DE MOTORISTAS ANALÍTICO
+        // --------------------------------------------------------------------
+        Route::get('/motoristas-analitico', [RelatorioController::class, 'relatorioMotoristasAnalitico'])
+            ->name('motoristas-analitico');
+        Route::get('/motoristas-analitico/exportar', [RelatorioController::class, 'exportarMotoristasAnaliticoPDF'])
+            ->name('motoristas-analitico.exportar');
+        Route::get('/motoristas-analitico/excel', [RelatorioController::class, 'exportarMotoristasAnaliticoExcel'])
+            ->name('motoristas-analitico.excel');
     });
 
     // ========================================================================
