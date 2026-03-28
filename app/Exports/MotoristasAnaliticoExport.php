@@ -9,14 +9,10 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-
 
 class MotoristasAnaliticoExport implements
     FromCollection,
     WithMapping,
-    WithColumnFormatting,
     ShouldAutoSize
 {
 
@@ -81,7 +77,7 @@ class MotoristasAnaliticoExport implements
 
             $dadosAgrupados[$motoristaId]['ordens'][] = [
                 'numero_os' => $os->numero_os ?? '',
-                'data_servico' => $os->data_servico,
+                'data_servico' => \Carbon\Carbon::parse($os->data_servico)->format('d/m/Y'),
                 'valor_motorista' => $valorMotorista,
                 'valor_ajudante' => $valorAjudante,
             ];
@@ -205,46 +201,14 @@ class MotoristasAnaliticoExport implements
 
     public function map($row): array
     {
-        // se data_servico está vazia ou é um rótulo, não precisa formatar
-        if (empty($row['data_servico']) || is_string($row['data_servico']) && 
-            in_array($row['data_servico'], ['Data do Serviço', 'SUBTOTAL', 'TOTAL GERAL'])) {
-            return [
-                $row['numero_os'] ?? '',
-                $row['data_servico'] ?? '',
-                $row['nome_motorista'] ?? '',
-                $row['apelido_motorista'] ?? '',
-                $row['valor_motorista'] ?? '',
-                $row['valor_ajudante'] ?? '',
-            ];
-        }
-
-        // Formatar a data como dd/mm/yyyy string (não como Excel serial)
-        $dataFormatada = $row['data_servico'];
-        try {
-            if (is_string($dataFormatada) && (strpos($dataFormatada, '-') !== false || strpos($dataFormatada, '/') !== false)) {
-                $dataFormatada = \Carbon\Carbon::parse($dataFormatada)->format('d/m/Y');
-            }
-        } catch (\Exception $e) {
-            // Se não conseguir parsear, mantém como está
-        }
-
+        // Todos os valores já estão formatados corretamente na collection()
         return [
             $row['numero_os'] ?? '',
-            $dataFormatada,
+            $row['data_servico'] ?? '',
             $row['nome_motorista'] ?? '',
             $row['apelido_motorista'] ?? '',
             $row['valor_motorista'] ?? '',
             $row['valor_ajudante'] ?? '',
-        ];
-    }
-
-    public function columnFormats(): array
-    {
-        return [
-            // Valor Motorista (coluna E)
-            'E' => '"R$" #,##0.00',
-            // Valor Ajudante (coluna F)
-            'F' => '"R$" #,##0.00',
         ];
     }
 }
