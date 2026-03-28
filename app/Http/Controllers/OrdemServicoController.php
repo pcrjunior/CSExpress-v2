@@ -85,7 +85,7 @@ class OrdemServicoController extends Controller
         // Filtro para OS agendadas (motorista temporario com data_servico no futuro)
         if ($request->filled('agendada')) {
             $query->whereHas('motorista', function ($q) {
-                $q->where('nome', 'motorista temporario');
+                $q->whereRaw('LOWER(nome) = ?', [strtolower('motorista temporario')]);
             });
         }
 
@@ -111,7 +111,7 @@ class OrdemServicoController extends Controller
     private function verificarOSAgendadas(): bool
     {
         return OrdemServico::whereHas('motorista', function ($q) {
-            $q->where('nome', 'motorista temporario');
+            $q->whereRaw('LOWER(nome) = ?', [strtolower('motorista temporario')]);
         })->exists();
     }
 
