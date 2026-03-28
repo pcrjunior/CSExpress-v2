@@ -146,15 +146,14 @@ class MotoristasAnaliticoExport implements
             ];
 
             // Linhas de cabeçalho de coluna para cada grupo
-            // Comentado pois não exibe bem no layout agrupado
-            // $linhas[] = [
-            //     'numero_os' => 'Número OS',
-            //     'data_servico' => 'Data do Serviço',
-            //     'nome_motorista' => '',
-            //     'apelido_motorista' => '',
-            //     'valor_motorista' => 'Valor Motorista',
-            //     'valor_ajudante' => 'Valor Ajudante',
-            // ];
+            $linhas[] = [
+                'numero_os' => 'Número OS',
+                'data_servico' => 'Data do Serviço',
+                'nome_motorista' => '',
+                'apelido_motorista' => '',
+                'valor_motorista' => 'Valor Motorista',
+                'valor_ajudante' => 'Valor Ajudante',
+            ];
 
             // Dados das ordens
             foreach ($motorista['ordens'] as $ordem) {
@@ -206,8 +205,9 @@ class MotoristasAnaliticoExport implements
 
     public function map($row): array
     {
-        // se data_servico está vazia, não precisa formatar data
-        if (empty($row['data_servico'])) {
+        // se data_servico está vazia ou é um rótulo, não precisa formatar
+        if (empty($row['data_servico']) || is_string($row['data_servico']) && 
+            in_array($row['data_servico'], ['Data do Serviço', 'SUBTOTAL', 'TOTAL GERAL'])) {
             return [
                 $row['numero_os'] ?? '',
                 $row['data_servico'] ?? '',
@@ -218,28 +218,19 @@ class MotoristasAnaliticoExport implements
             ];
         }
 
-        // verificar se é uma data válida antes de tentar parseá-la
-        $dataServico = $row['data_servico'];
-        $dataParsed = null;
-        
+        // Formatar a data como dd/mm/yyyy string (não como Excel serial)
+        $dataFormatada = $row['data_servico'];
         try {
-            // Verificar se é uma string que parece ser data (pode ser formatada com / ou -)
-            if (is_string($dataServico) && (strpos($dataServico, '-') !== false || strpos($dataServico, '/') !== false)) {
-                $dataParsed = Date::dateTimeToExcel(
-                    \Carbon\Carbon::parse($dataServico)
-                );
-            } else {
-                $dataParsed = $dataServico;
+            if (is_string($dataFormatada) && (strpos($dataFormatada, '-') !== false || strpos($dataFormatada, '/') !== false)) {
+                $dataFormatada = \Carbon\Carbon::parse($dataFormatada)->format('d/m/Y');
             }
         } catch (\Exception $e) {
-            // Se não conseguir parsear, retorna como string
-            $dataParsed = $dataServico;
+            // Se não conseguir parsear, mantém como está
         }
 
-        // formatar a data
         return [
             $row['numero_os'] ?? '',
-            $dataParsed,
+            $dataFormatada,
             $row['nome_motorista'] ?? '',
             $row['apelido_motorista'] ?? '',
             $row['valor_motorista'] ?? '',
@@ -250,8 +241,6 @@ class MotoristasAnaliticoExport implements
     public function columnFormats(): array
     {
         return [
-            // Data (coluna B) - FORMAT_DATE_DDMMYYYY
-            'B' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             // Valor Motorista (coluna E)
             'E' => '"R$" #,##0.00',
             // Valor Ajudante (coluna F)
