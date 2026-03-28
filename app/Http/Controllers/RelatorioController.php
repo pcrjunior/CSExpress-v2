@@ -766,7 +766,8 @@ class RelatorioController extends Controller
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.relatorio-motoristas', [
             'dados' => $dados,
-            'filtros' => $request->all(),
+            'data_inicio' => $request->input('data_inicio'),
+            'data_fim' => $request->input('data_fim'),
             'dataAtual' => now()->format('d/m/Y'),
         ]);
 
