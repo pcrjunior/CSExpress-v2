@@ -760,6 +760,19 @@ class RelatorioController extends Controller
         return Excel::download(new MotoristasExport($dados), 'relatorio-motoristas.xlsx');
     }
 
+    public function exportarMotoristasPDF(Request $request)
+    {
+        $dados = collect($this->gerarRelatorioMotoristas($request));
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.relatorio-motoristas', [
+            'dados' => $dados,
+            'filtros' => $request->all(),
+            'dataAtual' => now()->format('d/m/Y'),
+        ]);
+
+        return $pdf->download('relatorio-motoristas.pdf');
+    }
+
     public function exportarEntregadoresExcel(Request $request)
     {
         return Excel::download(new EntregadoresExport($request), 'relatorio-entregadores.xlsx');
