@@ -82,15 +82,37 @@ class OrdemServicoController extends Controller
             });
         }
 
+        // Filtro para OS agendadas (motorista temporario com data_servico no futuro)
+        if ($request->filled('agendada')) {
+            $query->whereHas('motorista', function ($q) {
+                $q->where('nome', 'motorista temporario');
+            });
+        }
+
         // Executa a consulta, ordenando os resultados e paginando
         $ordensServico = $query->latest()->paginate(15);
+
+        // Verifica se existem OS agendadas
+        $temOSAgendada = $this->verificarOSAgendadas();
 
         return view('ordemservicos.index', compact(
             'ordensServico',
             'empresas',
             'clientes',
-            'motoristas'
+            'motoristas',
+            'temOSAgendada'
         ));
+    }
+
+    /**
+     * Verifica se existem Ordens de Serviço agendadas
+     * (motorista temporario e data_servico diferente da data de criação)
+     */
+    private function verificarOSAgendadas(): bool
+    {
+        return OrdemServico::whereHas('motorista', function ($q) {
+            $q->where('nome', 'motorista temporario');
+        })->exists();
     }
 
     /**

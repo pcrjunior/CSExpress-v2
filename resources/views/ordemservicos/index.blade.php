@@ -7,6 +7,25 @@
 
 <div class="container-fluid py-4">
 
+    <!-- Alerta de OS Agendadas -->
+    @if($temOSAgendada)
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        <strong>Existem OS agendada que devem ser tratadas</strong>
+                    </div>
+                    <a href="{{ route('ordemservicos', ['agendada' => '1']) }}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-filter me-1"></i> OS Agendada
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Card de título -->
     <div class="row mb-1">
         <div class="col-12 mb-2">
@@ -259,7 +278,12 @@
         // Limpar filtros
         $('#btnLimparFiltros').click(function() {
             $('#formFiltros').find('input, select').val('');
-            $('#formFiltros').submit();
+            // Remove o parâmetro agendada se estiver na URL
+            const url = new URL(window.location);
+            url.searchParams.delete('agendada');
+            // Navega para a URL limpa
+            const formAction = "{{ route('ordemservicos') }}";
+            window.location.href = formAction;
         });
 
         // Configurar modal de exclusão
