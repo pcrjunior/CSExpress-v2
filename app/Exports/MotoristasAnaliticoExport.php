@@ -33,12 +33,7 @@ class MotoristasAnaliticoExport implements
         return [
             'Número OS',
             'Data do Serviço',
-            'Apelido',
-            'Valor Motorista',
-            'Valor Ajudante',
-        ];
-    }
-
+                'Nome Motorista',
     public function collection()
     {
         $query = OrdemServico::query()
@@ -75,7 +70,7 @@ class MotoristasAnaliticoExport implements
             return [
                 'numero_os' => $os->numero_os ?? '',
                 'data_servico' => $os->data_servico,
-                'apelido' => $motorista->apelido ?? '',
+                'nome_motorista' => $motorista->nome ?? '',
                 'valor_motorista' => $valorMotorista,
                 'valor_ajudante' => $valorAjudante,
             ];
@@ -85,7 +80,7 @@ class MotoristasAnaliticoExport implements
         $linhas->push([
             'numero_os' => '',
             'data_servico' => '',
-            'apelido' => '',
+            'nome_motorista' => '',
             'valor_motorista' => '',
             'valor_ajudante' => '',
         ]);
@@ -94,7 +89,7 @@ class MotoristasAnaliticoExport implements
         $linhas->push([
             'numero_os' => '',
             'data_servico' => '',
-            'apelido' => 'TOTAL',
+            'nome_motorista' => 'TOTAL',
             'valor_motorista' => $totalMotorista,
             'valor_ajudante' => $totalAjudante,
         ]);
@@ -112,7 +107,7 @@ class MotoristasAnaliticoExport implements
                 return [
                     '',
                     '',
-                    $row['apelido'] ?? '',
+                    $row['nome_motorista'] ?? '',
                     $row['valor_motorista'] ?? '',
                     $row['valor_ajudante'] ?? '',
                 ];
@@ -123,7 +118,7 @@ class MotoristasAnaliticoExport implements
                 Date::dateTimeToExcel(
                     \Carbon\Carbon::parse($row['data_servico'])
                 ),
-                $row['apelido'] ?? '',
+                $row['nome_motorista'] ?? '',
                 $row['valor_motorista'] ?? '',
                 $row['valor_ajudante'] ?? '',
             ];
@@ -137,7 +132,7 @@ class MotoristasAnaliticoExport implements
             Date::dateTimeToExcel(
                 \Carbon\Carbon::parse($row->data_servico)
             ),
-            $motorista->apelido ?? '',
+            $motorista->nome ?? '',
             (float) $row->valor_motorista,
             (float) $row->valor_ajudantes,
         ];

@@ -92,7 +92,7 @@
                         <tr>
                             <th>Número OS</th>
                             <th>Data do Serviço</th>
-                            <th>Apelido</th>
+                            <th>Nome Motorista</th>
                             <th class="text-end">Valor Motorista</th>
                             <th class="text-end">Valor Ajudante</th>
                         </tr>
@@ -102,7 +102,7 @@
                             <tr>
                                 <td>{{ $item['numero_os'] }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item['data_servico'])->format('d/m/y') }}</td>
-                                <td>{{ $item['apelido'] }}</td>
+                                <td>{{ $item['nome_motorista'] }}</td>
                                 <td class="text-end">R$ {{ number_format($item['valor_motorista'], 2, ',', '.') }}</td>
                                 <td class="text-end">R$ {{ number_format($item['valor_ajudante'], 2, ',', '.') }}</td>
                             </tr>

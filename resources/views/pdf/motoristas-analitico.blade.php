@@ -116,7 +116,7 @@
                 <tr>
                     <th>Número OS</th>
                     <th>Data do Serviço</th>
-                    <th>Apelido</th>
+                    <th>Nome Motorista</th>
                     <th class="text-end">Valor Motorista</th>
                     <th class="text-end">Valor Ajudante</th>
                 </tr>
@@ -131,7 +131,7 @@
                         {{ \Carbon\Carbon::parse($d['data_servico'])->format('d/m/y') }}
                     </td>
                     <td>
-                        {{ $d['apelido'] }}
+                        {{ $d['nome_motorista'] }}
                     </td>
 
                     <td class="text-end">
