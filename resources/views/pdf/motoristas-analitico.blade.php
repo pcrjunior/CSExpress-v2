@@ -154,13 +154,13 @@
                             {{ $ordem['numero_os'] }}
                         </td>
                         <td>
-                            {{ \Carbon\Carbon::parse($ordem['data_servico'])->format('d/m/y') }}
+                            {{ $ordem['data_servico'] }}
                         </td>
                         <td class="text-end">
-                            R$ {{ number_format($ordem['valor_motorista'], 2, ',', '.') }}
+                            {{ $ordem['valor_motorista'] }}
                         </td>
                         <td class="text-end">
-                            R$ {{ number_format($ordem['valor_ajudante'], 2, ',', '.') }}
+                            {{ $ordem['valor_ajudante'] }}
                         </td>
                     </tr>
                     @endforeach
@@ -169,10 +169,10 @@
                             TOTAL MOTORISTA
                         </td>
                         <td class="text-end">
-                            R$ {{ number_format($motorista['total_motorista'], 2, ',', '.') }}
+                            {{ $motorista['total_motorista_formatado'] }}
                         </td>
                         <td class="text-end">
-                            R$ {{ number_format($motorista['total_ajudante'], 2, ',', '.') }}
+                            {{ $motorista['total_ajudante_formatado'] }}
                         </td>
                     </tr>
                 </tbody>
@@ -189,10 +189,10 @@
                             TOTAL GERAL
                         </td>
                         <td class="text-end">
-                            R$ {{ number_format($totalGeralMotorista, 2, ',', '.') }}
+                            {{ $totalGeralMotorista }}
                         </td>
                         <td class="text-end">
-                            R$ {{ number_format($totalGeralAjudante, 2, ',', '.') }}
+                            {{ $totalGeralAjudante }}
                         </td>
                     </tr>
                 </tbody>

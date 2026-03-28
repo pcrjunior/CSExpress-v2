@@ -990,9 +990,9 @@ class RelatorioController extends Controller
 
             $dadosAgrupados[$motoristaId]['ordens'][] = [
                 'numero_os' => $os->numero_os ?? '',
-                'data_servico' => $os->data_servico,
-                'valor_motorista' => (float) ($os->valor_motorista ?? 0),
-                'valor_ajudante' => (float) ($os->valor_ajudantes ?? 0),
+                'data_servico' => \Carbon\Carbon::parse($os->data_servico)->format('d/m/Y'),
+                'valor_motorista' => 'R$ ' . number_format((float) ($os->valor_motorista ?? 0), 2, ',', '.'),
+                'valor_ajudante' => 'R$ ' . number_format((float) ($os->valor_ajudantes ?? 0), 2, ',', '.'),
             ];
 
             $dadosAgrupados[$motoristaId]['total_motorista'] += (float) ($os->valor_motorista ?? 0);
@@ -1001,12 +1001,18 @@ class RelatorioController extends Controller
             $totalGeralAjudante += (float) ($os->valor_ajudantes ?? 0);
         }
 
+        // Formatar totais de cada motorista
+        foreach ($dadosAgrupados as &$motorista) {
+            $motorista['total_motorista_formatado'] = 'R$ ' . number_format($motorista['total_motorista'], 2, ',', '.');
+            $motorista['total_ajudante_formatado'] = 'R$ ' . number_format($motorista['total_ajudante'], 2, ',', '.');
+        }
+
         $pdf = Pdf::loadView('pdf.motoristas-analitico', [
             'dadosAgrupados' => $dadosAgrupados,
             'dataInicio' => $dataInicio,
             'dataFim' => $dataFim,
-            'totalGeralMotorista' => $totalGeralMotorista,
-            'totalGeralAjudante' => $totalGeralAjudante,
+            'totalGeralMotorista' => 'R$ ' . number_format($totalGeralMotorista, 2, ',', '.'),
+            'totalGeralAjudante' => 'R$ ' . number_format($totalGeralAjudante, 2, ',', '.'),
             'dataAtual' => now()->format('d/m/Y'),
         ]);
 
