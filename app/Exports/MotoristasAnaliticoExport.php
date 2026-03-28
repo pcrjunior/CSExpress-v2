@@ -73,7 +73,7 @@ class MotoristasAnaliticoExport implements
             $totalAjudante += $valorAjudante;
 
             return [
-                'numero_os' => $os->numero ?? '',
+                'numero_os' => $os->numero_os ?? '',
                 'data_servico' => $os->data_servico,
                 'apelido' => $motorista->apelido ?? '',
                 'valor_motorista' => $valorMotorista,
@@ -133,7 +133,7 @@ class MotoristasAnaliticoExport implements
         $motorista = $row->motorista;
 
         return [
-            $row->numero ?? '',
+            $row->numero_os ?? '',
             Date::dateTimeToExcel(
                 \Carbon\Carbon::parse($row->data_servico)
             ),

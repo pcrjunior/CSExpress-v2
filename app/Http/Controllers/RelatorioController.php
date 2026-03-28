@@ -964,7 +964,7 @@ class RelatorioController extends Controller
             $motorista = $os->motorista;
 
             return [
-                'numero_os' => $os->numero ?? '',
+                'numero_os' => $os->numero_os ?? '',
                 'data_servico' => $os->data_servico,
                 'apelido' => $motorista->apelido ?? '',
                 'valor_motorista' => (float) ($os->valor_motorista ?? 0),
@@ -1022,7 +1022,7 @@ class RelatorioController extends Controller
             $motorista = $os->motorista;
 
             return [
-                'numero_os' => $os->numero ?? '',
+                'numero_os' => $os->numero_os ?? '',
                 'data_servico' => $os->data_servico,
                 'apelido' => $motorista->apelido ?? '',
                 'valor_motorista' => (float) $os->valor_motorista,
